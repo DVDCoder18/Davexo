@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: davexo-postgres
+
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - davexo_postgres_data:/var/lib/postgresql
+
+    restart: unless-stopped
+
+volumes:
+  davexo_postgres_data:
