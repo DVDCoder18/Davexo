@@ -25,15 +25,15 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(
-        name = "expense_category",
+        name = "inventory_category",
         uniqueConstraints = {
                 @UniqueConstraint(
-                    name = "uk_expense_category_user_name",
+                    name = "uk_inventory_category_user_name",
                     columnNames = {"user_id", "name"}
             )
         }
 )
-public class ExpenseCategory {
+public class InventoryCategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +42,9 @@ public class ExpenseCategory {
     @NotBlank
     @Column(nullable = false, length = 100)
     private String name;
-
+    
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @NotNull
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "budget_id")
-    private Budget budget;
 }
