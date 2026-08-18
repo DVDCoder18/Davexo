@@ -62,8 +62,6 @@ public class Task {
 
     @PrePersist
     public void prePersist() {
-        if (createdAt == null) {
-            createdAt = LocalDate.now();
-        }
+        createdAt = LocalDate.now();
     }
 }
