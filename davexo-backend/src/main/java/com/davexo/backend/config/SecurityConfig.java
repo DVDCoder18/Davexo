@@ -63,6 +63,16 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
                 
                 .requestMatchers("/api/task/**").authenticated()
+                
+                .requestMatchers("/api/budget/**").authenticated()
+                
+                .requestMatchers("/api/expense/**").authenticated()
+
+                .requestMatchers("/api/expense-category/**").authenticated()
+                
+                .requestMatchers("/api/inventory-category/**").authenticated()
+
+                .requestMatchers("/api/inventory-item/**").authenticated()
 
                 .anyRequest().authenticated()
             )

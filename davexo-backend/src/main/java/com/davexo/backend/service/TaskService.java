@@ -58,7 +58,7 @@ public class TaskService {
     @Transactional
     public void deleteTask(Integer taskId, Integer userId) {
 
-        Integer deleteCount = taskRepository.deleteByIdAndUserId(taskId, userId);
+        long deleteCount = taskRepository.deleteByIdAndUserId(taskId, userId);
 
         if (deleteCount == 0) {
             throw new ResourceNotFoundException("Task not found");

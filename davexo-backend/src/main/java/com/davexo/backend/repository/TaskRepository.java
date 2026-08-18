@@ -13,5 +13,5 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     List<Task> findAllByUserId(Integer userId);
 
-    Integer deleteByIdAndUserId(Integer taskId, Integer userId);
+    long deleteByIdAndUserId(Integer taskId, Integer userId);
 }
