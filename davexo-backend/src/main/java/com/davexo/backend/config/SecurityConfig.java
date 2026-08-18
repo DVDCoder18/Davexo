@@ -2,6 +2,8 @@ package com.davexo.backend.config;
 
 import com.davexo.backend.security.CustomAccessDeniedHandler;
 import com.davexo.backend.security.CustomAuthenticationEntryPoint;
+
+import org.apache.coyote.http11.HttpOutputBuffer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -60,6 +62,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
+                
+                .requestMatchers("/api/task/**").authenticated()
 
                 .anyRequest().authenticated()
             )
