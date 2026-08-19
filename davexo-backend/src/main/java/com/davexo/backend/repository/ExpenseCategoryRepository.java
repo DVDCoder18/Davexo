@@ -16,4 +16,12 @@ public interface ExpenseCategoryRepository extends JpaRepository<ExpenseCategory
     long deleteByIdAndUserId(Integer expenseCategoryId, Integer userId);
 
     boolean existsByNameIgnoreCaseAndUserId(String name, Integer userId);
+
+    boolean existsByNameIgnoreCaseAndUserIdAndIdNot(String name, Integer userId, Integer expenseCategoryId);
+
+    List<ExpenseCategory> findAllByIdInAndUserId(List<Integer> expenseCategoryIds, Integer userId);
+
+    List<ExpenseCategory> findAllByBudgetIdAndUserId(Integer budgetId, Integer userId);
+
+    List<ExpenseCategory> findAllByBudgetIdInAndUserId(List<Integer> budgetIds, Integer userId);
 }

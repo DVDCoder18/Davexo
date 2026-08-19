@@ -1,5 +1,7 @@
 package com.davexo.backend.mapper;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 import com.davexo.backend.dto.request.BudgetRequestDto;
@@ -9,13 +11,14 @@ import com.davexo.backend.entity.Budget;
 @Component
 public class BudgetMapper {
 
-    public BudgetResponseDto toBudgetResponseDto(Budget budget) {
+    public BudgetResponseDto toBudgetResponseDto(Budget budget, List<Integer> followedCategoryIds) {
 
         return BudgetResponseDto.builder()
                 .id(budget.getId())
                 .name(budget.getName())
                 .amount(budget.getAmount())
                 .scope(budget.getScope())
+                .followedCategoryIds(followedCategoryIds)
                 .build();
     }
     
@@ -23,7 +26,6 @@ public class BudgetMapper {
         return Budget.builder()
                 .name(budgetRequestDto.getName())
                 .amount(budgetRequestDto.getAmount())
-                .scope(budgetRequestDto.getScope())
                 .build();
     }
 }

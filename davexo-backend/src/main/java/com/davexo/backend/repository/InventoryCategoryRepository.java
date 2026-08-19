@@ -17,4 +17,6 @@ public interface InventoryCategoryRepository extends JpaRepository<InventoryCate
 
     boolean existsByNameIgnoreCaseAndUserId(String name, Integer userId);
 
+    boolean existsByNameIgnoreCaseAndUserIdAndIdNot(String name, Integer userId, Integer inventoryCategoryId);
+
 }

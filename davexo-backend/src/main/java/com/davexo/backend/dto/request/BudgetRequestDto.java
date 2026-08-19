@@ -1,8 +1,7 @@
 package com.davexo.backend.dto.request;
 
 import java.math.BigDecimal;
-
-import com.davexo.backend.enums.BudgetScope;
+import java.util.List;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
@@ -32,5 +31,5 @@ public class BudgetRequestDto {
     private BigDecimal amount;
 
     @NotNull
-    private BudgetScope scope;
+    private List<Integer> followedCategoryIds;
 }

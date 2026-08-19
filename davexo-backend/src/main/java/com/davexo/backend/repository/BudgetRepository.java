@@ -18,4 +18,6 @@ public interface BudgetRepository extends JpaRepository<Budget, Integer> {
 
     boolean existsByScopeAndUserId(BudgetScope scope, Integer userId);
 
+    boolean existsByScopeAndUserIdAndIdNot(BudgetScope scope, Integer userId, Integer budgetId);
+
 }

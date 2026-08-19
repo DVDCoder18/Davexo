@@ -1,6 +1,7 @@
 package com.davexo.backend.dto.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.davexo.backend.enums.BudgetScope;
 
@@ -24,4 +25,6 @@ public class BudgetResponseDto {
     private BigDecimal amount;
 
     private BudgetScope scope;
+
+    private List<Integer> followedCategoryIds;
 }
