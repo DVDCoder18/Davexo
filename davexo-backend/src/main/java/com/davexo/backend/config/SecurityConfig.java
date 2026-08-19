@@ -62,17 +62,17 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
                 
-                .requestMatchers("/api/task/**").authenticated()
+                .requestMatchers("/api/tasks/**").authenticated()
                 
-                .requestMatchers("/api/budget/**").authenticated()
+                .requestMatchers("/api/budgets/**").authenticated()
                 
-                .requestMatchers("/api/expense/**").authenticated()
+                .requestMatchers("/api/expenses/**").authenticated()
 
-                .requestMatchers("/api/expense-category/**").authenticated()
+                .requestMatchers("/api/expense-categories/**").authenticated()
                 
-                .requestMatchers("/api/inventory-category/**").authenticated()
+                .requestMatchers("/api/inventory-categories/**").authenticated()
 
-                .requestMatchers("/api/inventory-item/**").authenticated()
+                .requestMatchers("/api/inventory-items/**").authenticated()
 
                 .anyRequest().authenticated()
             )
