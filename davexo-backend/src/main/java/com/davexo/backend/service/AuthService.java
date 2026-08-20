@@ -63,11 +63,11 @@ public class AuthService {
         String email = signUpRequestDto.getEmail().trim().toLowerCase();
 
         if (!allowedEmailsList.contains(email)) {
-            throw new BusinessException("Email non autorisé à s'inscrire");
+            throw new BusinessException("Sign up isn't allowed with this email address.");
         }
 
         if (userRepository.existsByEmailIgnoreCase(email)) {
-            throw new BusinessException("Un compte est déjà associé à cet email");
+            throw new BusinessException("Sign up failed. Please check provided information.");
         }
 
         String passwordHash = passwordEncoder.encode(signUpRequestDto.getPassword());
