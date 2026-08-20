@@ -2,8 +2,8 @@ package com.davexo.backend.entity;
 
 import java.time.LocalDate;
 
-import com.davexo.backend.enums.PriorityLevels;
-import com.davexo.backend.enums.Status;
+import com.davexo.backend.enums.TaskPriority;
+import com.davexo.backend.enums.TaskStatus;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -16,9 +16,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "task")
 public class Task {
@@ -34,13 +34,13 @@ public class Task {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private PriorityLevels priority;
+    private TaskPriority priority;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private Status status = Status.TO_DO;
+    private TaskStatus status = TaskStatus.TO_DO;
 
     @NotNull
     @Column(nullable = false, name = "created_at")

@@ -11,7 +11,7 @@ import com.davexo.backend.dto.request.TaskUpdateRequestDto;
 import com.davexo.backend.dto.response.TaskResponseDto;
 import com.davexo.backend.entity.Task;
 import com.davexo.backend.entity.User;
-import com.davexo.backend.enums.Status;
+import com.davexo.backend.enums.TaskStatus;
 import com.davexo.backend.exception.BusinessException;
 import com.davexo.backend.exception.ResourceNotFoundException;
 import com.davexo.backend.mapper.TaskMapper;
@@ -81,7 +81,7 @@ public class TaskService {
             }
         }
 
-        if (dto.getStatus() == Status.COMPLETED) {
+        if (dto.getStatus() == TaskStatus.COMPLETED) {
             if (dto.getCompletedAt() == null) {
                 task.setCompletedAt(LocalDate.now());
             } else {
@@ -89,7 +89,7 @@ public class TaskService {
             }
         }
 
-        if (dto.getStatus() == Status.TO_DO) {
+        if (dto.getStatus() == TaskStatus.TO_DO) {
             task.setCompletedAt(null);
         }
 

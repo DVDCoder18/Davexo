@@ -2,8 +2,8 @@ package com.davexo.backend.dto.response;
 
 import java.time.LocalDate;
 
-import com.davexo.backend.enums.PriorityLevels;
-import com.davexo.backend.enums.Status;
+import com.davexo.backend.enums.TaskPriority;
+import com.davexo.backend.enums.TaskStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +22,9 @@ public class TaskResponseDto {
 
     private String title;
 
-    private PriorityLevels priority;
+    private TaskPriority priority;
 
-    private Status status;
+    private TaskStatus status;
 
     private LocalDate createdAt;
 

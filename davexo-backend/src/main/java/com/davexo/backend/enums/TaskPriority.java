@@ -1,6 +1,6 @@
 package com.davexo.backend.enums;
 
-public enum PriorityLevels {
+public enum TaskPriority {
     URGENT,
     IMPORTANT,
     NON_CRITICAL

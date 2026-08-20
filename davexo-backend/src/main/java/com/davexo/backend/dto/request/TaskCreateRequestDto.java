@@ -2,7 +2,7 @@ package com.davexo.backend.dto.request;
 
 import java.time.LocalDate;
 
-import com.davexo.backend.enums.PriorityLevels;
+import com.davexo.backend.enums.TaskPriority;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +26,7 @@ public class TaskCreateRequestDto {
     private String title;
 
     @NotNull
-    private PriorityLevels priority;
+    private TaskPriority priority;
 
     @FutureOrPresent
     private LocalDate dueDate;

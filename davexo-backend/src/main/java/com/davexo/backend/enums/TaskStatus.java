@@ -1,6 +1,6 @@
 package com.davexo.backend.enums;
 
-public enum Status {
+public enum TaskStatus {
     TO_DO,
     COMPLETED
 }

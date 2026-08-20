@@ -73,6 +73,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/inventory-categories/**").authenticated()
 
                 .requestMatchers("/api/inventory-items/**").authenticated()
+                
+                .requestMatchers("/api/statistics").authenticated()
 
                 .anyRequest().authenticated()
             )

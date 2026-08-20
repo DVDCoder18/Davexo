@@ -2,8 +2,8 @@ package com.davexo.backend.dto.request;
 
 import java.time.LocalDate;
 
-import com.davexo.backend.enums.PriorityLevels;
-import com.davexo.backend.enums.Status;
+import com.davexo.backend.enums.TaskPriority;
+import com.davexo.backend.enums.TaskStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,10 +26,10 @@ public class TaskUpdateRequestDto {
     private String title;
 
     @NotNull
-    private PriorityLevels priority;
+    private TaskPriority priority;
 
     @NotNull
-    private Status status;
+    private TaskStatus status;
 
     private LocalDate dueDate;
 
