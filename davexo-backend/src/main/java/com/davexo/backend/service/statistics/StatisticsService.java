@@ -19,6 +19,7 @@ public class StatisticsService {
 
     private final ExpenseStatisticsService expenseStatisticsService;
     private final TaskStatisticsService taskStatisticsService;
+    private final StatisticsPeriodUtils statisticsPeriodUtils;
 
     public StatisticsResponseDto getStatistics(
             Integer userId,
@@ -26,7 +27,7 @@ public class StatisticsService {
             LocalDate startDate,
             LocalDate endDate) {
 
-        StatisticsPeriodUtils.validatePeriod(
+        statisticsPeriodUtils.validatePeriod(
                 periodType,
                 startDate,
                 endDate);

@@ -2,6 +2,7 @@ package com.davexo.backend.service.statistics;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
@@ -27,6 +28,8 @@ public class ExpenseStatisticsService {
     private static final int DISPLAY_SCALE = 2;
 
     private final ExpenseRepository expenseRepository;
+    private final StatisticsPeriodUtils statisticsPeriodUtils;
+    private final Clock clock;
 
     public ExpenseStatisticsResponseDto getExpenseStatistics(
             Integer userId,
@@ -34,7 +37,7 @@ public class ExpenseStatisticsService {
             LocalDate startDate,
             LocalDate endDate) {
 
-        LocalDate effectiveEndDate = StatisticsPeriodUtils.getEffectiveEndDate(
+        LocalDate effectiveEndDate = statisticsPeriodUtils.getEffectiveEndDate(
                 startDate,
                 endDate);
 
@@ -73,7 +76,7 @@ public class ExpenseStatisticsService {
             LocalDate effectiveEndDate,
             BigDecimal currentTotal) {
 
-        DateRange previousPeriod = StatisticsPeriodUtils.getPreviousPeriod(
+        DateRange previousPeriod = statisticsPeriodUtils.getPreviousPeriod(
                 periodType,
                 startDate,
                 effectiveEndDate);
@@ -99,8 +102,7 @@ public class ExpenseStatisticsService {
                         RoundingMode.HALF_UP);
     }
 
-    private BigDecimal calculateHistoricalMonthlyAverage(
-            Integer userId) {
+    private BigDecimal calculateHistoricalMonthlyAverage(Integer userId) {
 
         Optional<LocalDate> firstExpenseDate = expenseRepository.findFirstExpenseDateByUserId(
                 userId);
@@ -111,7 +113,7 @@ public class ExpenseStatisticsService {
 
         YearMonth firstExpenseMonth = YearMonth.from(firstExpenseDate.get());
 
-        YearMonth lastCompletedMonth = YearMonth.now().minusMonths(1);
+        YearMonth lastCompletedMonth = YearMonth.now(clock).minusMonths(1);
 
         if (firstExpenseMonth.isAfter(lastCompletedMonth)) {
             return null;

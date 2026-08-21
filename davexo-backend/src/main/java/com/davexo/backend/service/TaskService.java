@@ -1,5 +1,6 @@
 package com.davexo.backend.service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,9 +26,12 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final Clock clock;
 
     @Transactional
-    public TaskResponseDto addTask(TaskCreateRequestDto taskCreateRequestDto, User authenticatedUser) {
+    public TaskResponseDto addTask(
+            TaskCreateRequestDto taskCreateRequestDto,
+            User authenticatedUser) {
 
         Task task = taskMapper.toTaskEntity(taskCreateRequestDto);
 
@@ -38,16 +42,18 @@ public class TaskService {
         return taskMapper.toTaskResponseDto(savedTask);
     }
 
-    public TaskResponseDto getTaskDetail(Integer taskId, Integer userId) {
+    public TaskResponseDto getTaskDetail(
+            Integer taskId,
+            Integer userId) {
 
         Task task = taskRepository.findByIdAndUserId(taskId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
 
         return taskMapper.toTaskResponseDto(task);
-
     }
 
     public List<TaskResponseDto> getAllTasks(Integer userId) {
+
         List<Task> taskList = taskRepository.findAllByUserId(userId);
 
         return taskList.stream()
@@ -56,7 +62,9 @@ public class TaskService {
     }
 
     @Transactional
-    public void deleteTask(Integer taskId, Integer userId) {
+    public void deleteTask(
+            Integer taskId,
+            Integer userId) {
 
         long deleteCount = taskRepository.deleteByIdAndUserId(taskId, userId);
 
@@ -66,8 +74,11 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDto updateTask(TaskUpdateRequestDto dto, Integer taskId, Integer userId) {
-        
+    public TaskResponseDto updateTask(
+            TaskUpdateRequestDto dto,
+            Integer taskId,
+            Integer userId) {
+
         Task task = taskRepository.findByIdAndUserId(taskId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
 
@@ -76,14 +87,17 @@ public class TaskService {
         }
 
         if (dto.getCompletedAt() != null) {
-            if (dto.getCompletedAt().isBefore(task.getCreatedAt()) || dto.getCompletedAt().isAfter(LocalDate.now())) {
-                throw new BusinessException("Date of completion must be between the task creation date and today's date");
+            if (dto.getCompletedAt().isBefore(task.getCreatedAt())
+                    || dto.getCompletedAt().isAfter(LocalDate.now(clock))) {
+
+                throw new BusinessException(
+                        "Date of completion must be between the task creation date and today's date");
             }
         }
 
         if (dto.getStatus() == TaskStatus.COMPLETED) {
             if (dto.getCompletedAt() == null) {
-                task.setCompletedAt(LocalDate.now());
+                task.setCompletedAt(LocalDate.now(clock));
             } else {
                 task.setCompletedAt(dto.getCompletedAt());
             }
@@ -103,5 +117,4 @@ public class TaskService {
 
         return taskMapper.toTaskResponseDto(savedTask);
     }
-
 }

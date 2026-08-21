@@ -60,8 +60,11 @@ public class Task {
     @Column(length = 255)
     private String note;
 
+    // Temporary modification for tests : if added to prevent forcefull assignement of today's date
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDate.now();
+        if (createdAt == null) {
+            createdAt = LocalDate.now();
+        }
     }
 }

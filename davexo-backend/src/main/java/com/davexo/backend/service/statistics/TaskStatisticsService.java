@@ -24,13 +24,14 @@ public class TaskStatisticsService {
     private static final int DISPLAY_SCALE = 2;
 
     private final TaskRepository taskRepository;
+    private final StatisticsPeriodUtils statisticsPeriodUtils;
 
     public TaskStatisticsResponseDto getTaskStatistics(
             Integer userId,
             LocalDate startDate,
             LocalDate endDate) {
 
-        LocalDate effectiveEndDate = StatisticsPeriodUtils.getEffectiveEndDate(
+        LocalDate effectiveEndDate = statisticsPeriodUtils.getEffectiveEndDate(
                 startDate,
                 endDate);
 
@@ -139,7 +140,6 @@ public class TaskStatisticsService {
         long totalCompletionDays = taskDates.stream()
                 .mapToLong(row -> {
                     LocalDate createdAt = (LocalDate) row[0];
-
                     LocalDate completedAt = (LocalDate) row[1];
 
                     return ChronoUnit.DAYS.between(

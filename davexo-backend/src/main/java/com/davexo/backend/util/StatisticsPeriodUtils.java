@@ -1,18 +1,24 @@
 package com.davexo.backend.util;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 
+import org.springframework.stereotype.Component;
+
 import com.davexo.backend.enums.StatisticsPeriod;
 
-public final class StatisticsPeriodUtils {
+import lombok.RequiredArgsConstructor;
 
-    private StatisticsPeriodUtils() {
-    }
+@Component
+@RequiredArgsConstructor
+public class StatisticsPeriodUtils {
 
-    public static void validatePeriod(
+    private final Clock clock;
+
+    public void validatePeriod(
             StatisticsPeriod periodType,
             LocalDate startDate,
             LocalDate endDate) {
@@ -27,7 +33,7 @@ public final class StatisticsPeriodUtils {
                     "Start date cannot be after end date");
         }
 
-        if (startDate.isAfter(LocalDate.now())) {
+        if (startDate.isAfter(LocalDate.now(clock))) {
             throw new IllegalArgumentException(
                     "Statistics cannot be requested for a future period");
         }
@@ -40,11 +46,11 @@ public final class StatisticsPeriodUtils {
         }
     }
 
-    public static LocalDate getEffectiveEndDate(
+    public LocalDate getEffectiveEndDate(
             LocalDate startDate,
             LocalDate endDate) {
 
-        LocalDate today = LocalDate.now();
+        LocalDate today = LocalDate.now(clock);
 
         if (!startDate.isAfter(today) && endDate.isAfter(today)) {
             return today;
@@ -53,29 +59,20 @@ public final class StatisticsPeriodUtils {
         return endDate;
     }
 
-    public static DateRange getPreviousPeriod(
+    public DateRange getPreviousPeriod(
             StatisticsPeriod periodType,
             LocalDate startDate,
             LocalDate effectiveEndDate) {
 
         return switch (periodType) {
             case DAY -> getPreviousDayPeriod(startDate);
-
-            case WEEK -> getPreviousWeekPeriod(
-                    startDate,
-                    effectiveEndDate);
-
-            case MONTH -> getPreviousMonthPeriod(
-                    startDate,
-                    effectiveEndDate);
-
-            case YEAR -> getPreviousYearPeriod(
-                    startDate,
-                    effectiveEndDate);
+            case WEEK -> getPreviousWeekPeriod(startDate, effectiveEndDate);
+            case MONTH -> getPreviousMonthPeriod(startDate, effectiveEndDate);
+            case YEAR -> getPreviousYearPeriod(startDate, effectiveEndDate);
         };
     }
 
-    private static void validateDayPeriod(
+    private void validateDayPeriod(
             LocalDate startDate,
             LocalDate endDate) {
 
@@ -85,7 +82,7 @@ public final class StatisticsPeriodUtils {
         }
     }
 
-    private static void validateWeekPeriod(
+    private void validateWeekPeriod(
             LocalDate startDate,
             LocalDate endDate) {
 
@@ -102,14 +99,13 @@ public final class StatisticsPeriodUtils {
         }
     }
 
-    private static void validateMonthPeriod(
+    private void validateMonthPeriod(
             LocalDate startDate,
             LocalDate endDate) {
 
         YearMonth selectedMonth = YearMonth.from(startDate);
 
         LocalDate expectedStartDate = selectedMonth.atDay(1);
-
         LocalDate expectedEndDate = selectedMonth.atEndOfMonth();
 
         if (!startDate.equals(expectedStartDate)) {
@@ -123,12 +119,11 @@ public final class StatisticsPeriodUtils {
         }
     }
 
-    private static void validateYearPeriod(
+    private void validateYearPeriod(
             LocalDate startDate,
             LocalDate endDate) {
 
         LocalDate expectedStartDate = LocalDate.of(startDate.getYear(), 1, 1);
-
         LocalDate expectedEndDate = LocalDate.of(startDate.getYear(), 12, 31);
 
         if (!startDate.equals(expectedStartDate)) {
@@ -142,17 +137,13 @@ public final class StatisticsPeriodUtils {
         }
     }
 
-    private static DateRange getPreviousDayPeriod(
-            LocalDate startDate) {
-
+    private DateRange getPreviousDayPeriod(LocalDate startDate) {
         LocalDate previousDay = startDate.minusDays(1);
 
-        return new DateRange(
-                previousDay,
-                previousDay);
+        return new DateRange(previousDay, previousDay);
     }
 
-    private static DateRange getPreviousWeekPeriod(
+    private DateRange getPreviousWeekPeriod(
             LocalDate startDate,
             LocalDate effectiveEndDate) {
 
@@ -164,12 +155,10 @@ public final class StatisticsPeriodUtils {
 
         LocalDate previousEndDate = previousStartDate.plusDays(elapsedDays);
 
-        return new DateRange(
-                previousStartDate,
-                previousEndDate);
+        return new DateRange(previousStartDate, previousEndDate);
     }
 
-    private static DateRange getPreviousMonthPeriod(
+    private DateRange getPreviousMonthPeriod(
             LocalDate startDate,
             LocalDate effectiveEndDate) {
 
@@ -183,22 +172,21 @@ public final class StatisticsPeriodUtils {
 
         LocalDate previousEndDate = previousMonth.atDay(comparableDay);
 
-        return new DateRange(
-                previousStartDate,
-                previousEndDate);
+        return new DateRange(previousStartDate, previousEndDate);
     }
 
-    private static DateRange getPreviousYearPeriod(
+    private DateRange getPreviousYearPeriod(
             LocalDate startDate,
             LocalDate effectiveEndDate) {
 
-        LocalDate previousStartDate = LocalDate.of(startDate.getYear() - 1, 1, 1);
+        LocalDate previousStartDate = LocalDate.of(
+                startDate.getYear() - 1,
+                1,
+                1);
 
         LocalDate previousEndDate = effectiveEndDate.minusYears(1);
 
-        return new DateRange(
-                previousStartDate,
-                previousEndDate);
+        return new DateRange(previousStartDate, previousEndDate);
     }
 
     public record DateRange(

@@ -1,13 +1,12 @@
 package com.davexo.backend;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class DavexoBackendApplicationTests {
+import com.davexo.backend.integration.AbstractIntegrationTest;
+
+class DavexoBackendApplicationTests extends AbstractIntegrationTest {
 
 	@Test
 	void contextLoads() {
 	}
-
 }

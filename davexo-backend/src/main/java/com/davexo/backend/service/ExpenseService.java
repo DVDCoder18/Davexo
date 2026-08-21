@@ -1,5 +1,6 @@
 package com.davexo.backend.service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,28 +26,38 @@ public class ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
     private final ExpenseMapper expenseMapper;
+    private final Clock clock;
 
     @Transactional
-    public ExpenseResponseDto addExpense(ExpenseRequestDto expenseRequestDto, User authenticatedUser) {
+    public ExpenseResponseDto addExpense(
+            ExpenseRequestDto expenseRequestDto,
+            User authenticatedUser) {
+
         Expense expense = expenseMapper.toExpenseEntity(expenseRequestDto);
 
         expense.setUser(authenticatedUser);
 
         expense.setExpenseCategory(
                 expenseCategoryRepository.findByIdAndUserId(
-                        expenseRequestDto.getExpenseCategoryId(), authenticatedUser.getId())
+                        expenseRequestDto.getExpenseCategoryId(),
+                        authenticatedUser.getId())
                         .orElseThrow(() -> new ResourceNotFoundException("Category Not found")));
 
         if (expenseRequestDto.getExpenseDate() == null) {
-            expense.setExpenseDate(LocalDate.now());
+            expense.setExpenseDate(LocalDate.now(clock));
         }
+
         Expense savedExpense = expenseRepository.save(expense);
 
         return expenseMapper.toExpenseResponseDto(savedExpense);
     }
-    
+
     @Transactional
-    public ExpenseResponseDto updateExpense(ExpenseRequestDto expenseRequestDto, Integer expenseId, Integer userId) {
+    public ExpenseResponseDto updateExpense(
+            ExpenseRequestDto expenseRequestDto,
+            Integer expenseId,
+            Integer userId) {
+
         Expense expense = expenseRepository.findByIdAndUserId(expenseId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
 
@@ -55,7 +66,9 @@ public class ExpenseService {
         }
 
         ExpenseCategory expenseCategory = expenseCategoryRepository
-                .findByIdAndUserId(expenseRequestDto.getExpenseCategoryId(), userId)
+                .findByIdAndUserId(
+                        expenseRequestDto.getExpenseCategoryId(),
+                        userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
 
         expense.setLabel(expenseRequestDto.getLabel());
@@ -66,28 +79,36 @@ public class ExpenseService {
         Expense savedExpense = expenseRepository.save(expense);
 
         return expenseMapper.toExpenseResponseDto(savedExpense);
-
     }
 
-    @Transactional 
-    public void deleteExpense(Integer expenseId, Integer userId) {
+    @Transactional
+    public void deleteExpense(
+            Integer expenseId,
+            Integer userId) {
 
-        long deleteCount = expenseRepository.deleteByIdAndUserId(expenseId, userId);
+        long deleteCount = expenseRepository.deleteByIdAndUserId(
+                expenseId,
+                userId);
 
         if (deleteCount == 0) {
             throw new ResourceNotFoundException("Expense not found");
         }
     }
-    
-    public ExpenseResponseDto getExpenseDetail(Integer expenseId, Integer userId) {
 
-        Expense expense = expenseRepository.findByIdAndUserId(expenseId, userId)
+    public ExpenseResponseDto getExpenseDetail(
+            Integer expenseId,
+            Integer userId) {
+
+        Expense expense = expenseRepository.findByIdAndUserId(
+                expenseId,
+                userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense not found"));
 
         return expenseMapper.toExpenseResponseDto(expense);
     }
-    
+
     public List<ExpenseResponseDto> getAllExpenses(Integer userId) {
+
         List<Expense> expenseList = expenseRepository.findAllByUserId(userId);
 
         return expenseList.stream()
