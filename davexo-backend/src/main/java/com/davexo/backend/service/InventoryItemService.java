@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 
 import com.davexo.backend.dto.request.InventoryItemRequestDto;
 import com.davexo.backend.dto.response.InventoryItemResponseDto;
+import com.davexo.backend.dto.response.ShoppingListResponseDto;
 import com.davexo.backend.entity.InventoryCategory;
 import com.davexo.backend.entity.InventoryItem;
 import com.davexo.backend.entity.User;
@@ -17,6 +18,8 @@ import com.davexo.backend.repository.InventoryItemRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -118,12 +121,55 @@ public class InventoryItemService {
 
     @Transactional
     public List<InventoryItemResponseDto> getAllInventoryItems(Integer userId) {
-        
+
         List<InventoryItem> inventoryItemList = inventoryItemRepository.findAllByUserId(userId);
 
         return inventoryItemList.stream()
                 .map(inventoryItemMapper::toInventoryItemResponseDto)
                 .toList();
+    }
+    
+    @Transactional
+    public ShoppingListResponseDto getShoppingList(Integer userId) {
+
+        List<InventoryItem> inventoryItems = inventoryItemRepository.findShoppingListByUserId(userId);
+
+        ShoppingListResponseDto shoppingList = new ShoppingListResponseDto();
+
+        shoppingList.setHighPriorityItems(new ArrayList<>());
+        shoppingList.setMediumPriorityItems(new ArrayList<>());
+        shoppingList.setLowPriorityItems(new ArrayList<>());
+
+        for (InventoryItem inventoryItem : inventoryItems) {
+
+            if (inventoryItem.getStatus() == InventoryStatus.MISSING
+                    || inventoryItem.getStatus() == InventoryStatus.TO_REPLACE) {
+
+                shoppingList.getHighPriorityItems()
+                        .add(inventoryItemMapper.toInventoryItemResponseDto(inventoryItem));
+
+            }
+
+            else if (inventoryItem.getStatus() == InventoryStatus.LOW_STOCK
+                    || inventoryItem.getStatus() == InventoryStatus.NEED_MORE) {
+
+                shoppingList.getMediumPriorityItems()
+                        .add(inventoryItemMapper.toInventoryItemResponseDto(inventoryItem));
+            }
+            
+            else if (inventoryItem.getStatus() == InventoryStatus.OUT_OF_SERVICE) { 
+
+                shoppingList.getLowPriorityItems()
+                        .add(inventoryItemMapper.toInventoryItemResponseDto(inventoryItem));
+
+            }
+        }
+        
+        shoppingList.setTotalItems(shoppingList.getHighPriorityItems().size()
+                + shoppingList.getMediumPriorityItems().size() + shoppingList.getLowPriorityItems().size());
+        
+        return shoppingList;
+
     }
     
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.davexo.backend.dto.request.InventoryItemRequestDto;
 import com.davexo.backend.dto.response.InventoryItemResponseDto;
+import com.davexo.backend.dto.response.ShoppingListResponseDto;
 import com.davexo.backend.security.CustomUserDetails;
 import com.davexo.backend.service.InventoryItemService;
 
@@ -41,12 +42,21 @@ public class InventoryItemController {
     
     @GetMapping
     public ResponseEntity<List<InventoryItemResponseDto>> getAllInventoryItems(
-            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
-        List<InventoryItemResponseDto> response = inventoryItemService
-                .getAllInventoryItems(customUserDetails.getUser().getId());
+            List<InventoryItemResponseDto> response = inventoryItemService
+                            .getAllInventoryItems(customUserDetails.getUser().getId());
 
-        return ResponseEntity.ok(response);
+            return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/shopping-list")
+    public ResponseEntity<ShoppingListResponseDto> getShoppingList(
+                    @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+        
+            ShoppingListResponseDto response = inventoryItemService.getShoppingList(customUserDetails.getUser().getId());
+
+            return ResponseEntity.ok(response);
     }
 
     @PostMapping
