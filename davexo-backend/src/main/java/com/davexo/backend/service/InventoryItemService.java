@@ -32,8 +32,7 @@ public class InventoryItemService {
         List<InventoryStatus> consumableStatuses = List.of(
                 InventoryStatus.IN_STOCK,
                 InventoryStatus.LOW_STOCK,
-                InventoryStatus.MISSING,
-                InventoryStatus.EXPIRED);
+                InventoryStatus.MISSING);
 
         List<InventoryStatus> durableStatuses = List.of(
                 InventoryStatus.IN_SERVICE,

@@ -6,7 +6,6 @@ public enum InventoryStatus {
     IN_STOCK,
     LOW_STOCK,
     MISSING,
-    EXPIRED,
             
     // Durable inventory status
     IN_SERVICE,

@@ -206,7 +206,7 @@ class InventoryItemServiceTest {
     void updateInventoryItem_shouldRejectInvalidTypeStatusCombinationBeforeSaving() {
         InventoryItemRequestDto dto = createRequestDto(
                 InventoryItemType.DURABLE,
-                InventoryStatus.EXPIRED);
+                InventoryStatus.MISSING);
 
         BusinessException exception = assertThrows(
                 BusinessException.class,

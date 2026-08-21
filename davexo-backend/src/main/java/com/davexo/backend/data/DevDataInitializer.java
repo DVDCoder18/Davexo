@@ -753,7 +753,7 @@ public class DevDataInitializer implements ApplicationRunner {
                 inventoryItem(
                         "Yaourts",
                         InventoryItemType.CONSUMABLE,
-                        InventoryStatus.EXPIRED,
+                        InventoryStatus.MISSING,
                         null,
                         food,
                         user),
