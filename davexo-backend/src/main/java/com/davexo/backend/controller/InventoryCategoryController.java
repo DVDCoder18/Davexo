@@ -19,17 +19,27 @@ import com.davexo.backend.dto.response.InventoryCategoryResponseDto;
 import com.davexo.backend.security.CustomUserDetails;
 import com.davexo.backend.service.InventoryCategoryService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/inventory-categories")
 @RequiredArgsConstructor
+@Tag(
+        name = "Inventory Categories",
+        description = "Inventory category management")
 public class InventoryCategoryController {
 
     private final InventoryCategoryService inventoryCategoryService;
 
     @GetMapping("/{inventoryCategoryId}")
+    @Operation(summary = "Get inventory category")
+    @ApiResponse(responseCode = "200", description = "Inventory category returned successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Inventory category not found")
     public ResponseEntity<InventoryCategoryResponseDto> getInventoryCategoryDetail(
             @PathVariable Integer inventoryCategoryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -40,6 +50,9 @@ public class InventoryCategoryController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all inventory categories")
+    @ApiResponse(responseCode = "200", description = "Inventory categories returned successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
     public ResponseEntity<List<InventoryCategoryResponseDto>> getAllInventoryCategories(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -50,6 +63,10 @@ public class InventoryCategoryController {
     }
     
     @PostMapping
+    @Operation(summary = "Create inventory category")
+    @ApiResponse(responseCode = "201", description = "Inventory category created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
     public ResponseEntity<InventoryCategoryResponseDto> addInventoryCategory(
             @Valid @RequestBody InventoryCategoryRequestDto inventoryCategoryRequestDto,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -61,6 +78,11 @@ public class InventoryCategoryController {
     }
     
     @PutMapping("/{inventoryCategoryId}")
+    @Operation(summary = "Update inventory category")
+    @ApiResponse(responseCode = "200", description = "Inventory category updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Inventory category not found")
     public ResponseEntity<InventoryCategoryResponseDto> updateInventoryCategory(
             @Valid @RequestBody InventoryCategoryRequestDto inventoryCategoryRequestDto,
             @PathVariable Integer inventoryCategoryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -72,6 +94,10 @@ public class InventoryCategoryController {
     }
 
     @DeleteMapping("/{inventoryCategoryId}")
+    @Operation(summary = "Delete inventory category")
+    @ApiResponse(responseCode = "204", description = "Inventory category deleted successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Inventory category not found")
     public ResponseEntity<Void> deleteInventoryCategory(
             @PathVariable Integer inventoryCategoryId, @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         

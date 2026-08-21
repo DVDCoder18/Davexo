@@ -1,33 +1,41 @@
 package com.davexo.backend.dto.response;
 
 import java.math.BigDecimal;
+import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "Aggregated dashboard data for the authenticated user")
 public class DashboardResponseDto {
 
+    @Schema(description = "Total amount spent by the user during the current month")
     private BigDecimal currentMonthExpensesTotal;
-    
+
+    @Schema(description = "Total number of tasks currently in TO_DO status")
     private long totalTasksToDo;
 
+    @Schema(description = "Total number of inventory items currently included in the shopping list")
     private long totalShoppingItems;
 
+    @Schema(description = "Current consumption of the user's global budget, or null if no global budget exists")
     private BudgetConsumptionResponseDto globalBudgetConsumption;
 
+    @Schema(description = "Up to 5 TO_DO tasks ordered by business priority and due date")
     private List<TaskResponseDto> tasksToDo;
 
+    @Schema(description = "Up to 5 shopping list items ordered by shopping priority")
     private List<InventoryItemResponseDto> shoppingItems;
 
-    private List<ExpenseResponseDto> recentExpenses; 
+    @Schema(description = "The 10 most recent expenses, ordered by expense date descending")
+    private List<ExpenseResponseDto> recentExpenses;
 }

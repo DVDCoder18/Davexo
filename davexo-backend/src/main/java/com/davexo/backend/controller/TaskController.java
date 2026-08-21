@@ -20,17 +20,27 @@ import com.davexo.backend.dto.response.TaskResponseDto;
 import com.davexo.backend.security.CustomUserDetails;
 import com.davexo.backend.service.TaskService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Tag(
+        name = "Tasks",
+        description = "Task management")
 public class TaskController {
 
     private final TaskService taskService;
 
     @PostMapping
+    @Operation(summary = "Create task")
+    @ApiResponse(responseCode = "201", description = "Task created successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
     public ResponseEntity<TaskResponseDto> addTask(@Valid @RequestBody TaskCreateRequestDto taskCreateRequestDto,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -39,6 +49,10 @@ public class TaskController {
     }
     
     @GetMapping("/{taskId}")
+    @Operation(summary = "Get task")
+    @ApiResponse(responseCode = "200", description = "Task returned successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Task not found")
     public ResponseEntity<TaskResponseDto> getTaskDetail(
             @PathVariable Integer taskId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
@@ -50,6 +64,9 @@ public class TaskController {
     }
 
     @GetMapping
+    @Operation(summary = "Get all tasks")
+    @ApiResponse(responseCode = "200", description = "Tasks returned successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
     public ResponseEntity<List<TaskResponseDto>> getAllTasks(
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
@@ -59,6 +76,10 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
+    @Operation(summary = "Delete task")
+    @ApiResponse(responseCode = "204", description = "Task deleted successfully")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Task not found")
     public ResponseEntity<Void> deleteTask(@PathVariable Integer taskId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
         taskService.deleteTask(taskId, customUserDetails.getUser().getId());
@@ -66,6 +87,11 @@ public class TaskController {
     }
     
     @PutMapping("/{taskId}")
+    @Operation(summary = "Update task")
+    @ApiResponse(responseCode = "200", description = "Task updated successfully")
+    @ApiResponse(responseCode = "400", description = "Invalid request")
+    @ApiResponse(responseCode = "401", description = "Authentication required")
+    @ApiResponse(responseCode = "404", description = "Task not found")
     public ResponseEntity<TaskResponseDto> updateTask (@Valid @RequestBody TaskUpdateRequestDto taskUpdateRequestDto,
             @PathVariable Integer taskId,
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
