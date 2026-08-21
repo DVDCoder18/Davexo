@@ -54,4 +54,20 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
             """)
     Optional<LocalDate> findFirstExpenseDateByUserId(
             @Param("userId") Integer userId);
+
+            
+
+        
+    @Query("""
+        SELECT COALESCE(SUM(e.amount), 0)
+        FROM Expense e
+        WHERE e.user.id = :userId
+        AND e.expenseDate BETWEEN :startDate AND :endDate
+        AND e.expenseCategory.budget.id = :budgetId
+        """)
+    BigDecimal sumAmountByUserAndBudgetAndPeriod(
+                    @Param("userId") Integer userId,
+                    @Param("budgetId") Integer budgetId,
+                    @Param("startDate") LocalDate startDate,
+                    @Param("endDate") LocalDate endDate);
 }

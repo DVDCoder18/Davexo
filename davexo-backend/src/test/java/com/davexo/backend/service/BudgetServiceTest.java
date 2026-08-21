@@ -10,6 +10,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.davexo.backend.dto.request.BudgetRequestDto;
+import com.davexo.backend.dto.response.BudgetConsumptionResponseDto;
 import com.davexo.backend.dto.response.BudgetResponseDto;
 import com.davexo.backend.entity.Budget;
 import com.davexo.backend.entity.ExpenseCategory;
@@ -30,6 +35,7 @@ import com.davexo.backend.exception.ResourceNotFoundException;
 import com.davexo.backend.mapper.BudgetMapper;
 import com.davexo.backend.repository.BudgetRepository;
 import com.davexo.backend.repository.ExpenseCategoryRepository;
+import com.davexo.backend.repository.ExpenseRepository;
 
 @ExtendWith(MockitoExtension.class)
 class BudgetServiceTest {
@@ -44,16 +50,25 @@ class BudgetServiceTest {
     private ExpenseCategoryRepository expenseCategoryRepository;
 
     @Mock
+    private ExpenseRepository expenseRepository;
+
+    @Mock
     private BudgetMapper budgetMapper;
 
     private BudgetService budgetService;
 
     @BeforeEach
     void setUp() {
+        Clock fixedClock = Clock.fixed(
+                Instant.parse("2026-08-20T12:00:00Z"),
+                ZoneId.of("Europe/Paris"));
+
         budgetService = new BudgetService(
                 budgetRepository,
                 expenseCategoryRepository,
-                budgetMapper);
+                expenseRepository,
+                budgetMapper,
+                fixedClock);
     }
 
     @Test
@@ -493,6 +508,147 @@ class BudgetServiceTest {
 
         assertNull(category1.getBudget());
         assertNull(category2.getBudget());
+    }
+
+    @Test
+    void getBudgetConsumption_shouldCalculateGlobalBudgetConsumption() {
+        Budget budget = createBudget(
+                BUDGET_ID,
+                BudgetScope.GLOBAL);
+
+        when(budgetRepository.findByIdAndUserId(
+                BUDGET_ID,
+                USER_ID))
+                .thenReturn(Optional.of(budget));
+
+        when(expenseRepository.sumAmountByUserAndPeriod(
+                USER_ID,
+                LocalDate.of(2026, 8, 1),
+                LocalDate.of(2026, 8, 20)))
+                .thenReturn(new BigDecimal("125.00"));
+
+        BudgetConsumptionResponseDto result = budgetService.getBudgetConsumption(
+                BUDGET_ID,
+                USER_ID);
+
+        assertEquals(
+                BUDGET_ID,
+                result.getBudgetId());
+
+        assertEquals(
+                new BigDecimal("500.00"),
+                result.getBudgetAmount());
+
+        assertEquals(
+                new BigDecimal("125.00"),
+                result.getSpentAmount());
+
+        assertEquals(
+                new BigDecimal("375.00"),
+                result.getRemainingAmount());
+
+        assertEquals(
+                new BigDecimal("25.00"),
+                result.getConsumptionPercentage());
+    }
+
+    @Test
+    void getBudgetConsumption_shouldCalculateSelectedCategoriesBudgetConsumption() {
+        Budget budget = createBudget(
+                BUDGET_ID,
+                BudgetScope.SELECTED_CATEGORIES);
+
+        when(budgetRepository.findByIdAndUserId(
+                BUDGET_ID,
+                USER_ID))
+                .thenReturn(Optional.of(budget));
+
+        when(expenseRepository.sumAmountByUserAndBudgetAndPeriod(
+                USER_ID,
+                BUDGET_ID,
+                LocalDate.of(2026, 8, 1),
+                LocalDate.of(2026, 8, 20)))
+                .thenReturn(new BigDecimal("300.00"));
+
+        BudgetConsumptionResponseDto result = budgetService.getBudgetConsumption(
+                BUDGET_ID,
+                USER_ID);
+
+        assertEquals(
+                new BigDecimal("300.00"),
+                result.getSpentAmount());
+
+        assertEquals(
+                new BigDecimal("200.00"),
+                result.getRemainingAmount());
+
+        assertEquals(
+                new BigDecimal("60.00"),
+                result.getConsumptionPercentage());
+    }
+
+    @Test
+    void getBudgetConsumption_shouldAllowBudgetOverrun() {
+        Budget budget = createBudget(
+                BUDGET_ID,
+                BudgetScope.GLOBAL);
+
+        when(budgetRepository.findByIdAndUserId(
+                BUDGET_ID,
+                USER_ID))
+                .thenReturn(Optional.of(budget));
+
+        when(expenseRepository.sumAmountByUserAndPeriod(
+                USER_ID,
+                LocalDate.of(2026, 8, 1),
+                LocalDate.of(2026, 8, 20)))
+                .thenReturn(new BigDecimal("650.00"));
+
+        BudgetConsumptionResponseDto result = budgetService.getBudgetConsumption(
+                BUDGET_ID,
+                USER_ID);
+
+        assertEquals(
+                new BigDecimal("-150.00"),
+                result.getRemainingAmount());
+
+        assertEquals(
+                new BigDecimal("130.00"),
+                result.getConsumptionPercentage());
+    }
+
+    @Test
+    void getBudgetConsumption_shouldReturnNullPercentageWhenBudgetAmountIsZero() {
+        Budget budget = createBudget(
+                BUDGET_ID,
+                BudgetScope.GLOBAL);
+
+        budget.setAmount(BigDecimal.ZERO);
+
+        when(budgetRepository.findByIdAndUserId(
+                BUDGET_ID,
+                USER_ID))
+                .thenReturn(Optional.of(budget));
+
+        when(expenseRepository.sumAmountByUserAndPeriod(
+                USER_ID,
+                LocalDate.of(2026, 8, 1),
+                LocalDate.of(2026, 8, 20)))
+                .thenReturn(BigDecimal.ZERO);
+
+        BudgetConsumptionResponseDto result = budgetService.getBudgetConsumption(
+                BUDGET_ID,
+                USER_ID);
+
+        assertEquals(
+                BigDecimal.ZERO,
+                result.getSpentAmount());
+
+        assertEquals(
+                BigDecimal.ZERO,
+                result.getRemainingAmount());
+
+        assertNull(result.getConsumptionPercentage());
     }
 
     @Test

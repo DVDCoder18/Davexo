@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.davexo.backend.dto.request.BudgetRequestDto;
+import com.davexo.backend.dto.response.BudgetConsumptionResponseDto;
 import com.davexo.backend.dto.response.BudgetResponseDto;
 import com.davexo.backend.security.CustomUserDetails;
 import com.davexo.backend.service.BudgetService;
@@ -43,6 +44,28 @@ public class BudgetController {
             @AuthenticationPrincipal CustomUserDetails customUserDetails) {
 
         List<BudgetResponseDto> response = budgetService.getAllBudgets(customUserDetails.getUser().getId());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{budgetId}/consumption")
+    public ResponseEntity<BudgetConsumptionResponseDto> getBudgetConsumption(
+            @PathVariable Integer budgetId,
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        BudgetConsumptionResponseDto response = budgetService.getBudgetConsumption(
+                budgetId,
+                customUserDetails.getUser().getId());
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/consumptions")
+    public ResponseEntity<List<BudgetConsumptionResponseDto>> getAllBudgetConsumptions(
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        List<BudgetConsumptionResponseDto> response = budgetService.getAllBudgetConsumptions(
+                customUserDetails.getUser().getId());
 
         return ResponseEntity.ok(response);
     }
