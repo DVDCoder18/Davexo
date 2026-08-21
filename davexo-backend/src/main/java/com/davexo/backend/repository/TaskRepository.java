@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.davexo.backend.entity.Task;
+import com.davexo.backend.enums.TaskStatus;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
 
@@ -18,12 +19,14 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
 
     long deleteByIdAndUserId(Integer taskId, Integer userId);
 
+    long countByUserIdAndStatus(Integer userId, TaskStatus status);
+
     @Query("""
-        SELECT COUNT(t)
-        FROM Task t
-        WHERE t.user.id = :userId
-        AND t.dueDate BETWEEN :startDate AND :endDate
-        """)
+            SELECT COUNT(t)
+            FROM Task t
+            WHERE t.user.id = :userId
+            AND t.dueDate BETWEEN :startDate AND :endDate
+            """)
     long countPlannedTasksByPeriod(
             @Param("userId") Integer userId,
             @Param("startDate") LocalDate startDate,
@@ -65,7 +68,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
 
-    
     @Query("""
             SELECT t.priority, COUNT(t)
             FROM Task t
@@ -77,4 +79,24 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
             @Param("userId") Integer userId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate);
+
+    @Query("""
+            SELECT t
+            FROM Task t
+            WHERE t.user.id = :userId
+              AND t.status = com.davexo.backend.enums.TaskStatus.TO_DO
+            ORDER BY
+                CASE
+                    WHEN t.priority = com.davexo.backend.enums.TaskPriority.URGENT THEN 1
+                    WHEN t.priority = com.davexo.backend.enums.TaskPriority.IMPORTANT THEN 2
+                    WHEN t.priority = com.davexo.backend.enums.TaskPriority.NON_CRITICAL THEN 3
+                    ELSE 4
+                END,
+                CASE
+                    WHEN t.dueDate IS NULL THEN 1
+                    ELSE 0
+                END,
+                t.dueDate ASC
+            """)
+    List<Task> findDashboardTasksByUserId(@Param("userId") Integer userId);
 }

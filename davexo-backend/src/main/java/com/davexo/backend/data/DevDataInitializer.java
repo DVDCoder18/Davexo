@@ -1,6 +1,7 @@
 package com.davexo.backend.data;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -44,6 +45,15 @@ public class DevDataInitializer implements ApplicationRunner {
     private static final String DEV_EMAIL = "dev@davexo.local";
     private static final String DEV_PASSWORD = "Dev1234!";
 
+    private static final String SECONDARY_EMAIL = "secondary@davexo.local";
+    private static final String SECONDARY_PASSWORD = "Secondary1234!";
+
+    private static final String ADMIN_EMAIL = "admin@davexo.local";
+    private static final String ADMIN_PASSWORD = "Admin1234!";
+
+    private static final String DISABLED_EMAIL = "disabled@davexo.local";
+    private static final String DISABLED_PASSWORD = "Disabled1234!";
+
     private final UserRepository userRepository;
     private final BudgetRepository budgetRepository;
     private final ExpenseCategoryRepository expenseCategoryRepository;
@@ -52,6 +62,7 @@ public class DevDataInitializer implements ApplicationRunner {
     private final InventoryCategoryRepository inventoryCategoryRepository;
     private final InventoryItemRepository inventoryItemRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Clock clock;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -60,13 +71,73 @@ public class DevDataInitializer implements ApplicationRunner {
             return;
         }
 
-        User user = createUser();
+        LocalDate today = LocalDate.now(clock);
+
+        User mainUser = createUser(
+                "Davexo Dev",
+                DEV_EMAIL,
+                DEV_PASSWORD,
+                Role.USER,
+                true,
+                today.minusMonths(8));
+
+        User secondaryUser = createUser(
+                "Davexo Secondary",
+                SECONDARY_EMAIL,
+                SECONDARY_PASSWORD,
+                Role.USER,
+                true,
+                today.minusMonths(2));
+
+        createUser(
+                "Davexo Admin",
+                ADMIN_EMAIL,
+                ADMIN_PASSWORD,
+                Role.ADMIN,
+                true,
+                today.minusYears(1));
+
+        createUser(
+                "Davexo Disabled",
+                DISABLED_EMAIL,
+                DISABLED_PASSWORD,
+                Role.USER,
+                false,
+                today.minusMonths(1));
+
+        createMainUserData(mainUser, today);
+        createSecondaryUserData(secondaryUser, today);
+
+        printCredentials();
+    }
+
+    private User createUser(
+            String pseudo,
+            String email,
+            String password,
+            Role role,
+            boolean active,
+            LocalDate createdAt) {
+
+        User user = User.builder()
+                .pseudo(pseudo)
+                .email(email)
+                .passwordHash(passwordEncoder.encode(password))
+                .createdAt(createdAt)
+                .role(role)
+                .isActive(active)
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private void createMainUserData(User user, LocalDate today) {
 
         createBudget(
-            "Budget mensuel global",
-            "1800.00",
-            BudgetScope.GLOBAL,
-            user);
+                "Budget mensuel global",
+                "1800.00",
+                BudgetScope.GLOBAL,
+                user);
 
         Budget foodBudget = createBudget(
                 "Budget alimentation",
@@ -80,32 +151,147 @@ public class DevDataInitializer implements ApplicationRunner {
                 BudgetScope.SELECTED_CATEGORIES,
                 user);
 
-        ExpenseCategories expenseCategories = createExpenseCategories(user, foodBudget, transportBudget);
+        ExpenseCategories categories = createMainExpenseCategories(
+                user,
+                foodBudget,
+                transportBudget);
 
-        createExpenses(user, expenseCategories);
-
-        createTasks(user);
-
-        createInventory(user);
-
-        System.out.println("----------------------------------------");
-        System.out.println("Davexo development data initialized");
-        System.out.println("Email: " + DEV_EMAIL);
-        System.out.println("Password: " + DEV_PASSWORD);
-        System.out.println("----------------------------------------");
+        createMainExpenses(user, categories, today);
+        createMainTasks(user, today);
+        createMainInventory(user);
     }
 
-    private User createUser() {
+    private void createSecondaryUserData(User user, LocalDate today) {
 
-        User user = User.builder()
-                .pseudo("Davexo Dev")
-                .email(DEV_EMAIL)
-                .passwordHash(passwordEncoder.encode(DEV_PASSWORD))
-                .role(Role.USER)
-                .isActive(true)
-                .build();
+        Budget dailyLifeBudget = createBudget(
+                "Budget vie quotidienne",
+                "300.00",
+                BudgetScope.SELECTED_CATEGORIES,
+                user);
 
-        return userRepository.save(user);
+        ExpenseCategory groceries = createExpenseCategory(
+                "Courses",
+                user,
+                dailyLifeBudget);
+
+        ExpenseCategory housing = createExpenseCategory(
+                "Logement",
+                user,
+                null);
+
+        ExpenseCategory leisure = createExpenseCategory(
+                "Loisirs",
+                user,
+                null);
+
+        YearMonth currentMonth = YearMonth.from(today);
+        YearMonth previousMonth = currentMonth.minusMonths(1);
+
+        expenseRepository.saveAll(List.of(
+                expense(
+                        "Loyer secondaire",
+                        "620.00",
+                        null,
+                        previousMonth.atDay(1),
+                        housing,
+                        user),
+                expense(
+                        "Courses secondaires",
+                        "72.40",
+                        null,
+                        previousMonth.atDay(8),
+                        groceries,
+                        user),
+                expense(
+                        "Cinéma",
+                        "13.50",
+                        null,
+                        previousMonth.atDay(18),
+                        leisure,
+                        user),
+                expense(
+                        "Loyer secondaire",
+                        "620.00",
+                        null,
+                        currentMonth.atDay(1),
+                        housing,
+                        user),
+                expense(
+                        "Courses secondaires",
+                        "58.90",
+                        null,
+                        safeCurrentMonthDate(currentMonth, today, 6),
+                        groceries,
+                        user)));
+
+        taskRepository.saveAll(List.of(
+                task(
+                        "Envoyer un justificatif",
+                        TaskPriority.URGENT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(2),
+                        today.plusDays(1),
+                        null,
+                        null,
+                        user),
+                task(
+                        "Préparer la semaine",
+                        TaskPriority.IMPORTANT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(1),
+                        today.plusDays(4),
+                        null,
+                        null,
+                        user),
+                task(
+                        "Trier les photos",
+                        TaskPriority.NON_CRITICAL,
+                        TaskStatus.TO_DO,
+                        today.minusDays(5),
+                        null,
+                        null,
+                        "Tâche volontairement sans échéance",
+                        user),
+                task(
+                        "Réserver un rendez-vous",
+                        TaskPriority.IMPORTANT,
+                        TaskStatus.COMPLETED,
+                        today.minusDays(10),
+                        today.minusDays(3),
+                        today.minusDays(4),
+                        null,
+                        user)));
+
+        InventoryCategory food = createInventoryCategory(
+                "Alimentation",
+                user);
+
+        InventoryCategory home = createInventoryCategory(
+                "Maison",
+                user);
+
+        inventoryItemRepository.saveAll(List.of(
+                inventoryItem(
+                        "Café",
+                        InventoryItemType.CONSUMABLE,
+                        InventoryStatus.MISSING,
+                        null,
+                        food,
+                        user),
+                inventoryItem(
+                        "Riz",
+                        InventoryItemType.CONSUMABLE,
+                        InventoryStatus.IN_STOCK,
+                        null,
+                        food,
+                        user),
+                inventoryItem(
+                        "Lampe de bureau",
+                        InventoryItemType.DURABLE,
+                        InventoryStatus.TO_REPLACE,
+                        "Interrupteur défectueux",
+                        home,
+                        user)));
     }
 
     private Budget createBudget(
@@ -124,7 +310,7 @@ public class DevDataInitializer implements ApplicationRunner {
         return budgetRepository.save(budget);
     }
 
-    private ExpenseCategories createExpenseCategories(
+    private ExpenseCategories createMainExpenseCategories(
             User user,
             Budget foodBudget,
             Budget transportBudget) {
@@ -194,11 +380,12 @@ public class DevDataInitializer implements ApplicationRunner {
         return expenseCategoryRepository.save(category);
     }
 
-    private void createExpenses(
+    private void createMainExpenses(
             User user,
-            ExpenseCategories categories) {
+            ExpenseCategories categories,
+            LocalDate today) {
 
-        YearMonth currentMonth = YearMonth.now();
+        YearMonth currentMonth = YearMonth.from(today);
         YearMonth previousMonth = currentMonth.minusMonths(1);
         YearMonth twoMonthsAgo = currentMonth.minusMonths(2);
         YearMonth fourMonthsAgo = currentMonth.minusMonths(4);
@@ -206,15 +393,13 @@ public class DevDataInitializer implements ApplicationRunner {
         YearMonth sixMonthsAgo = currentMonth.minusMonths(6);
 
         /*
-         * Le mois currentMonth - 3 est volontairement vide.
-         *
-         * Cela permet de tester la moyenne mensuelle historique :
-         * le mois doit compter dans la moyenne même s'il contient 0 €.
+         * currentMonth - 3 est volontairement vide.
+         * Cela permet de vérifier que la moyenne mensuelle historique
+         * prend aussi en compte un mois à 0 €.
          */
 
         List<Expense> expenses = List.of(
 
-                // Six mois auparavant
                 expense(
                         "Loyer",
                         "720.00",
@@ -222,6 +407,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         sixMonthsAgo.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses semaine",
                         "74.35",
@@ -229,6 +415,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         sixMonthsAgo.atDay(5),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Essence",
                         "58.40",
@@ -237,7 +424,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         categories.transport(),
                         user),
 
-                // Cinq mois auparavant
                 expense(
                         "Loyer",
                         "720.00",
@@ -245,6 +431,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fiveMonthsAgo.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses alimentaires",
                         "92.70",
@@ -252,6 +439,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fiveMonthsAgo.atDay(8),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Cinéma",
                         "14.50",
@@ -259,6 +447,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fiveMonthsAgo.atDay(15),
                         categories.leisure(),
                         user),
+
                 expense(
                         "Pharmacie",
                         "26.80",
@@ -267,7 +456,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         categories.health(),
                         user),
 
-                // Quatre mois auparavant
                 expense(
                         "Loyer",
                         "720.00",
@@ -275,6 +463,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fourMonthsAgo.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses",
                         "110.25",
@@ -282,6 +471,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fourMonthsAgo.atDay(10),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Restaurant",
                         "42.90",
@@ -289,6 +479,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         fourMonthsAgo.atDay(18),
                         categories.restaurants(),
                         user),
+
                 expense(
                         "Streaming",
                         "15.99",
@@ -297,12 +488,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         categories.subscriptions(),
                         user),
 
-                /*
-                 * currentMonth - 3 :
-                 * aucune dépense volontairement.
-                 */
-
-                // Deux mois auparavant
                 expense(
                         "Loyer",
                         "720.00",
@@ -310,6 +495,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         twoMonthsAgo.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses",
                         "83.45",
@@ -317,6 +503,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         twoMonthsAgo.atDay(4),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Train",
                         "46.00",
@@ -324,6 +511,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         twoMonthsAgo.atDay(9),
                         categories.transport(),
                         user),
+
                 expense(
                         "Restaurant",
                         "35.90",
@@ -331,6 +519,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         twoMonthsAgo.atDay(17),
                         categories.restaurants(),
                         user),
+
                 expense(
                         "Jeu vidéo",
                         "39.99",
@@ -339,7 +528,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         categories.leisure(),
                         user),
 
-                // Mois précédent
                 expense(
                         "Loyer",
                         "720.00",
@@ -347,6 +535,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses début de mois",
                         "86.20",
@@ -354,6 +543,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(3),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Essence",
                         "62.50",
@@ -361,6 +551,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(7),
                         categories.transport(),
                         user),
+
                 expense(
                         "Restaurant",
                         "54.30",
@@ -368,6 +559,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(12),
                         categories.restaurants(),
                         user),
+
                 expense(
                         "Spotify",
                         "11.12",
@@ -375,6 +567,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(15),
                         categories.subscriptions(),
                         user),
+
                 expense(
                         "Médecin",
                         "30.00",
@@ -382,6 +575,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(18),
                         categories.health(),
                         user),
+
                 expense(
                         "Achat imprévu",
                         "28.90",
@@ -390,7 +584,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         categories.miscellaneous(),
                         user),
 
-                // Mois courant
                 expense(
                         "Loyer",
                         "720.00",
@@ -398,44 +591,85 @@ public class DevDataInitializer implements ApplicationRunner {
                         currentMonth.atDay(1),
                         categories.housing(),
                         user),
+
                 expense(
                         "Courses",
                         "68.75",
                         null,
-                        currentMonth.atDay(
-                                Math.min(3, LocalDate.now().getDayOfMonth())),
+                        safeCurrentMonthDate(currentMonth, today, 3),
                         categories.groceries(),
                         user),
+
                 expense(
                         "Bus",
                         "24.50",
                         null,
-                        currentMonth.atDay(
-                                Math.min(6, LocalDate.now().getDayOfMonth())),
+                        safeCurrentMonthDate(currentMonth, today, 6),
                         categories.transport(),
                         user),
+
                 expense(
                         "Restaurant",
                         "31.80",
                         null,
-                        currentMonth.atDay(
-                                Math.min(10, LocalDate.now().getDayOfMonth())),
+                        safeCurrentMonthDate(currentMonth, today, 10),
                         categories.restaurants(),
                         user),
+
                 expense(
                         "Netflix",
                         "13.49",
                         null,
-                        currentMonth.atDay(
-                                Math.min(15, LocalDate.now().getDayOfMonth())),
+                        safeCurrentMonthDate(currentMonth, today, 15),
                         categories.subscriptions(),
                         user),
+
+                expense(
+                        "Pharmacie",
+                        "18.20",
+                        null,
+                        safeCurrentMonthDate(currentMonth, today, 17),
+                        categories.health(),
+                        user),
+
+                expense(
+                        "Sortie",
+                        "22.00",
+                        null,
+                        safeCurrentMonthDate(currentMonth, today, 18),
+                        categories.leisure(),
+                        user),
+
+                expense(
+                        "Essence complément",
+                        "34.00",
+                        null,
+                        safeCurrentMonthDate(currentMonth, today, 19),
+                        categories.transport(),
+                        user),
+
                 expense(
                         "Courses complémentaires",
                         "45.60",
                         null,
-                        LocalDate.now(),
+                        today,
                         categories.groceries(),
+                        user),
+
+                expense(
+                        "Petit achat",
+                        "8.90",
+                        null,
+                        today,
+                        categories.miscellaneous(),
+                        user),
+
+                expense(
+                        "Déjeuner",
+                        "16.50",
+                        null,
+                        today,
+                        categories.restaurants(),
                         user));
 
         expenseRepository.saveAll(expenses);
@@ -459,21 +693,18 @@ public class DevDataInitializer implements ApplicationRunner {
                 .build();
     }
 
-    private void createTasks(User user) {
-
-        LocalDate today = LocalDate.now();
+    private void createMainTasks(User user, LocalDate today) {
 
         LocalDate currentWeekMonday = today.with(
                 TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
 
         LocalDate previousWeekMonday = currentWeekMonday.minusWeeks(1);
 
-        YearMonth previousMonth = YearMonth.now().minusMonths(1);
-        YearMonth twoMonthsAgo = YearMonth.now().minusMonths(2);
+        YearMonth previousMonth = YearMonth.from(today).minusMonths(1);
+        YearMonth twoMonthsAgo = YearMonth.from(today).minusMonths(2);
 
         List<Task> tasks = List.of(
 
-                // Anciennes tâches terminées
                 task(
                         "Renouveler assurance",
                         TaskPriority.IMPORTANT,
@@ -504,7 +735,6 @@ public class DevDataInitializer implements ApplicationRunner {
                         "Terminée en retard",
                         user),
 
-                // Mois précédent
                 task(
                         "Déclarer un changement administratif",
                         TaskPriority.URGENT,
@@ -532,20 +762,9 @@ public class DevDataInitializer implements ApplicationRunner {
                         previousMonth.atDay(2),
                         null,
                         previousMonth.atDay(20),
-                        "Tâche sans échéance",
+                        "Tâche terminée sans échéance",
                         user),
 
-                task(
-                        "Commander une pièce de rechange",
-                        TaskPriority.IMPORTANT,
-                        TaskStatus.TO_DO,
-                        previousMonth.atDay(15),
-                        previousMonth.atEndOfMonth(),
-                        null,
-                        null,
-                        user),
-
-                // Semaine précédente
                 task(
                         "Envoyer un document important",
                         TaskPriority.URGENT,
@@ -576,14 +795,13 @@ public class DevDataInitializer implements ApplicationRunner {
                         "Terminée après la date prévue",
                         user),
 
-                // Semaine actuelle
                 task(
                         "Finaliser une fonctionnalité importante",
                         TaskPriority.URGENT,
                         TaskStatus.COMPLETED,
                         currentWeekMonday.minusDays(3),
                         currentWeekMonday,
-                        currentWeekMonday,
+                        dateNotAfterToday(currentWeekMonday, today),
                         null,
                         user),
 
@@ -593,41 +811,10 @@ public class DevDataInitializer implements ApplicationRunner {
                         TaskStatus.COMPLETED,
                         currentWeekMonday.minusDays(7),
                         currentWeekMonday.plusDays(1),
-                        dateNotAfterToday(currentWeekMonday.plusDays(1)),
+                        dateNotAfterToday(currentWeekMonday.plusDays(1), today),
                         null,
                         user),
 
-                task(
-                        "Corriger une anomalie",
-                        TaskPriority.URGENT,
-                        TaskStatus.COMPLETED,
-                        currentWeekMonday.minusDays(4),
-                        dateNotAfterToday(currentWeekMonday.plusDays(2)),
-                        dateNotAfterToday(currentWeekMonday.plusDays(3)),
-                        "Cas potentiellement terminé en retard",
-                        user),
-
-                task(
-                        "Lire une documentation technique",
-                        TaskPriority.NON_CRITICAL,
-                        TaskStatus.TO_DO,
-                        currentWeekMonday,
-                        today.plusDays(3),
-                        null,
-                        null,
-                        user),
-
-                task(
-                        "Préparer les prochaines tâches",
-                        TaskPriority.IMPORTANT,
-                        TaskStatus.TO_DO,
-                        today,
-                        today.plusDays(5),
-                        null,
-                        null,
-                        user),
-
-                // Pas de dueDate mais terminée aujourd'hui
                 task(
                         "Classer les téléchargements",
                         TaskPriority.NON_CRITICAL,
@@ -635,10 +822,9 @@ public class DevDataInitializer implements ApplicationRunner {
                         today.minusDays(12),
                         null,
                         today,
-                        "Teste les statistiques basées sur completedAt sans dueDate",
+                        "Teste completedAt avec dueDate null",
                         user),
 
-                // Créée et terminée le même jour
                 task(
                         "Répondre à un message",
                         TaskPriority.NON_CRITICAL,
@@ -649,18 +835,76 @@ public class DevDataInitializer implements ApplicationRunner {
                         "Durée de traitement : 0 jour",
                         user),
 
-                // Tâche longue
                 task(
-                        "Travail de fond",
-                        TaskPriority.IMPORTANT,
-                        TaskStatus.COMPLETED,
-                        today.minusDays(30),
-                        today.plusDays(2),
-                        today,
-                        "Teste une durée de réalisation longue",
+                        "Corriger le bug bloquant",
+                        TaskPriority.URGENT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(3),
+                        today.minusDays(1),
+                        null,
+                        "Tâche urgente en retard",
                         user),
 
-                // Sans échéance et non terminée
+                task(
+                        "Envoyer le dossier",
+                        TaskPriority.URGENT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(2),
+                        today.plusDays(1),
+                        null,
+                        null,
+                        user),
+
+                task(
+                        "Appeler le service client",
+                        TaskPriority.URGENT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(1),
+                        null,
+                        null,
+                        "Urgente sans échéance",
+                        user),
+
+                task(
+                        "Préparer la prochaine fonctionnalité",
+                        TaskPriority.IMPORTANT,
+                        TaskStatus.TO_DO,
+                        today,
+                        today.plusDays(2),
+                        null,
+                        null,
+                        user),
+
+                task(
+                        "Mettre à jour le README",
+                        TaskPriority.IMPORTANT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(1),
+                        today.plusDays(5),
+                        null,
+                        null,
+                        user),
+
+                task(
+                        "Comparer les offres internet",
+                        TaskPriority.IMPORTANT,
+                        TaskStatus.TO_DO,
+                        today.minusDays(4),
+                        null,
+                        null,
+                        "Importante sans échéance",
+                        user),
+
+                task(
+                        "Lire une documentation technique",
+                        TaskPriority.NON_CRITICAL,
+                        TaskStatus.TO_DO,
+                        today.minusDays(2),
+                        today.plusDays(3),
+                        null,
+                        null,
+                        user),
+
                 task(
                         "Apprendre un nouveau sujet",
                         TaskPriority.NON_CRITICAL,
@@ -696,13 +940,7 @@ public class DevDataInitializer implements ApplicationRunner {
                 .build();
     }
 
-    private LocalDate dateNotAfterToday(LocalDate date) {
-        return date.isAfter(LocalDate.now())
-                ? LocalDate.now()
-                : date;
-    }
-
-    private void createInventory(User user) {
+    private void createMainInventory(User user) {
 
         InventoryCategory food = createInventoryCategory(
                 "Alimentation",
@@ -746,7 +984,7 @@ public class DevDataInitializer implements ApplicationRunner {
                         "Café",
                         InventoryItemType.CONSUMABLE,
                         InventoryStatus.MISSING,
-                        "À ajouter à la prochaine liste de courses",
+                        "À acheter",
                         food,
                         user),
 
@@ -785,8 +1023,8 @@ public class DevDataInitializer implements ApplicationRunner {
                 inventoryItem(
                         "Lessive",
                         InventoryItemType.CONSUMABLE,
-                        InventoryStatus.NEED_MORE,
-                        "Prévoir un second bidon",
+                        InventoryStatus.LOW_STOCK,
+                        "Prévoir un nouveau bidon",
                         cleaning,
                         user),
 
@@ -819,6 +1057,22 @@ public class DevDataInitializer implements ApplicationRunner {
                         InventoryItemType.DURABLE,
                         InventoryStatus.NEED_MORE,
                         "Une supplémentaire serait utile",
+                        electronics,
+                        user),
+
+                inventoryItem(
+                        "Chargeur USB-C",
+                        InventoryItemType.DURABLE,
+                        InventoryStatus.NEED_MORE,
+                        "Prévoir un chargeur supplémentaire",
+                        electronics,
+                        user),
+
+                inventoryItem(
+                        "Clavier",
+                        InventoryItemType.DURABLE,
+                        InventoryStatus.TO_REPLACE,
+                        "Plusieurs touches répondent mal",
                         electronics,
                         user),
 
@@ -869,6 +1123,53 @@ public class DevDataInitializer implements ApplicationRunner {
                 .inventoryCategory(category)
                 .user(user)
                 .build();
+    }
+
+    private LocalDate safeCurrentMonthDate(
+            YearMonth month,
+            LocalDate today,
+            int requestedDay) {
+
+        int day = Math.min(requestedDay, today.getDayOfMonth());
+
+        return month.atDay(day);
+    }
+
+    private LocalDate dateNotAfterToday(
+            LocalDate date,
+            LocalDate today) {
+
+        return date.isAfter(today)
+                ? today
+                : date;
+    }
+
+    private void printCredentials() {
+
+        System.out.println("----------------------------------------");
+        System.out.println("Davexo development data initialized");
+        System.out.println();
+
+        System.out.println("Main user:");
+        System.out.println("Email: " + DEV_EMAIL);
+        System.out.println("Password: " + DEV_PASSWORD);
+        System.out.println();
+
+        System.out.println("Secondary user:");
+        System.out.println("Email: " + SECONDARY_EMAIL);
+        System.out.println("Password: " + SECONDARY_PASSWORD);
+        System.out.println();
+
+        System.out.println("Admin:");
+        System.out.println("Email: " + ADMIN_EMAIL);
+        System.out.println("Password: " + ADMIN_PASSWORD);
+        System.out.println();
+
+        System.out.println("Disabled user:");
+        System.out.println("Email: " + DISABLED_EMAIL);
+        System.out.println("Password: " + DISABLED_PASSWORD);
+
+        System.out.println("----------------------------------------");
     }
 
     private record ExpenseCategories(

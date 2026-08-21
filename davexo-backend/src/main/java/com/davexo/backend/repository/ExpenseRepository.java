@@ -19,6 +19,8 @@ public interface ExpenseRepository extends JpaRepository<Expense, Integer> {
 
     long deleteByIdAndUserId(Integer expenseId, Integer userId);
 
+    List<Expense> findTop10ByUserIdOrderByExpenseDateDescIdDesc(Integer userId);
+
     @Query("""
         SELECT COALESCE(SUM(e.amount), 0)
         FROM Expense e

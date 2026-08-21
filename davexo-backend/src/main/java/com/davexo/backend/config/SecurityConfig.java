@@ -1,5 +1,6 @@
 package com.davexo.backend.config;
 
+import com.davexo.backend.enums.Role;
 import com.davexo.backend.security.CustomAccessDeniedHandler;
 import com.davexo.backend.security.CustomAuthenticationEntryPoint;
 
@@ -61,6 +62,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
+
+                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                 
                 .requestMatchers("/api/tasks/**").authenticated()
                 
@@ -75,6 +78,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/inventory-items/**").authenticated()
                 
                 .requestMatchers("/api/statistics").authenticated()
+                
+                .requestMatchers("/api/dashboard/**").authenticated()
 
                 .anyRequest().authenticated()
             )
