@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import com.davexo.backend.enums.TaskPriority;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -29,8 +30,10 @@ public class TaskCreateRequestDto {
     private TaskPriority priority;
 
     @FutureOrPresent
+    @Schema(nullable = true)
     private LocalDate dueDate;
 
     @Size(max = 255)
+    @Schema(nullable = true)
     private String note;
 }

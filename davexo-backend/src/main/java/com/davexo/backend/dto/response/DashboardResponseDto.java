@@ -29,7 +29,7 @@ public class DashboardResponseDto {
     @Schema(description = "Total number of inventory items currently included in the shopping list", requiredMode = Schema.RequiredMode.REQUIRED)
     private long totalShoppingItems;
 
-    @Schema(description = "Current consumption of the user's global budget, or null if no global budget exists", requiredMode = Schema.RequiredMode.REQUIRED, nullable = true)
+    @Schema(description = "Current consumption of the user's global budget, or null if no global budget exists", requiredMode = Schema.RequiredMode.REQUIRED)
     private BudgetConsumptionResponseDto globalBudgetConsumption;
 
     @NotNull

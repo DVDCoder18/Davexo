@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.davexo.backend.enums.TaskPriority;
 import com.davexo.backend.enums.TaskStatus;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -31,11 +32,14 @@ public class TaskUpdateRequestDto {
     @NotNull
     private TaskStatus status;
 
+    @Schema(nullable = true)
     private LocalDate dueDate;
 
+    @Schema(nullable = true)
     private LocalDate completedAt;
 
     @Size(max = 255)
+    @Schema(nullable = true)
     private String note;
-    
+        
 }

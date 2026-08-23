@@ -35,7 +35,7 @@ public class InventoryItemRequestDto {
     private InventoryStatus status;
 
     @Size(max = 500)
-    @Schema(description = "Optional note about the inventory item")
+    @Schema(description = "Optional note about the inventory item", nullable = true)
     private String note;
 
     @NotNull

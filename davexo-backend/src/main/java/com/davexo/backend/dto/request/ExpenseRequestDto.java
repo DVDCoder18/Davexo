@@ -3,6 +3,7 @@ package com.davexo.backend.dto.request;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
@@ -31,8 +32,10 @@ public class ExpenseRequestDto {
     private BigDecimal amount;
 
     @Size(max = 255)
+    @Schema(nullable = true)
     private String note;
 
+    @Schema(nullable = true)
     private LocalDate expenseDate;
 
     @NotNull
