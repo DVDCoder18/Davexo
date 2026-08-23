@@ -17,6 +17,8 @@ import { Observable }                                        from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 // @ts-ignore
+import { CustomErrorResponse } from '../model/customErrorResponse';
+// @ts-ignore
 import { InventoryCategoryRequestDto } from '../model/inventoryCategoryRequestDto';
 // @ts-ignore
 import { InventoryCategoryResponseDto } from '../model/inventoryCategoryResponseDto';
@@ -45,10 +47,10 @@ export class InventoryCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
-    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
-    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
-    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
+    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
+    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
+    public addInventoryCategory(inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (inventoryCategoryRequestDto === null || inventoryCategoryRequestDto === undefined) {
             throw new Error('Required parameter inventoryCategoryRequestDto was null or undefined when calling addInventoryCategory.');
         }
@@ -59,7 +61,7 @@ export class InventoryCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -114,10 +116,10 @@ export class InventoryCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deleteInventoryCategory(inventoryCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public deleteInventoryCategory(inventoryCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public deleteInventoryCategory(inventoryCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (inventoryCategoryId === null || inventoryCategoryId === undefined) {
             throw new Error('Required parameter inventoryCategoryId was null or undefined when calling deleteInventoryCategory.');
         }
@@ -128,6 +130,7 @@ export class InventoryCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -171,10 +174,10 @@ export class InventoryCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getAllInventoryCategories(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<Array<InventoryCategoryResponseDto>>;
-    public getAllInventoryCategories(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<InventoryCategoryResponseDto>>>;
-    public getAllInventoryCategories(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<InventoryCategoryResponseDto>>>;
-    public getAllInventoryCategories(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAllInventoryCategories(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<InventoryCategoryResponseDto>>;
+    public getAllInventoryCategories(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<InventoryCategoryResponseDto>>>;
+    public getAllInventoryCategories(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<InventoryCategoryResponseDto>>>;
+    public getAllInventoryCategories(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -182,7 +185,7 @@ export class InventoryCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -227,10 +230,10 @@ export class InventoryCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
-    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
-    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
-    public getInventoryCategoryDetail(inventoryCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
+    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
+    public getInventoryCategoryDetail(inventoryCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
+    public getInventoryCategoryDetail(inventoryCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (inventoryCategoryId === null || inventoryCategoryId === undefined) {
             throw new Error('Required parameter inventoryCategoryId was null or undefined when calling getInventoryCategoryDetail.');
         }
@@ -241,7 +244,7 @@ export class InventoryCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -287,10 +290,10 @@ export class InventoryCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
-    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
-    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
-    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<InventoryCategoryResponseDto>;
+    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<InventoryCategoryResponseDto>>;
+    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<InventoryCategoryResponseDto>>;
+    public updateInventoryCategory(inventoryCategoryId: number, inventoryCategoryRequestDto: InventoryCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (inventoryCategoryId === null || inventoryCategoryId === undefined) {
             throw new Error('Required parameter inventoryCategoryId was null or undefined when calling updateInventoryCategory.');
         }
@@ -304,7 +307,7 @@ export class InventoryCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);

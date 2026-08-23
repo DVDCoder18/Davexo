@@ -9,10 +9,22 @@
  */
 
 
+/**
+ * Completed task statistics for one priority
+ */
 export interface TaskPriorityBreakdownResponseDto { 
-    priority?: TaskPriorityBreakdownResponseDto.PriorityEnum;
-    count?: number;
-    percentage?: number;
+    /**
+     * Task priority
+     */
+    priority: TaskPriorityBreakdownResponseDto.PriorityEnum;
+    /**
+     * Number of completed tasks with this priority
+     */
+    count: number;
+    /**
+     * Percentage of completed tasks represented by this priority
+     */
+    percentage: number;
 }
 export namespace TaskPriorityBreakdownResponseDto {
     export const PriorityEnum = {

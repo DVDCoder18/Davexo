@@ -9,10 +9,25 @@
  */
 
 
+/**
+ * Expense category data
+ */
 export interface ExpenseCategoryResponseDto { 
-    id?: number;
-    name?: string;
-    budgetId?: number;
-    budgetName?: string;
+    /**
+     * Expense category identifier
+     */
+    id: number;
+    /**
+     * Expense category name
+     */
+    name: string;
+    /**
+     * Associated budget identifier, or null if no budget is associated
+     */
+    budgetId: number | null;
+    /**
+     * Associated budget name, or null if no budget is associated
+     */
+    budgetName: string | null;
 }
 

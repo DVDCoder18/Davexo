@@ -9,8 +9,17 @@
  */
 
 
+/**
+ * Inventory category data
+ */
 export interface InventoryCategoryResponseDto { 
-    id?: number;
-    name?: string;
+    /**
+     * Inventory category identifier
+     */
+    id: number;
+    /**
+     * Inventory category name
+     */
+    name: string;
 }
 

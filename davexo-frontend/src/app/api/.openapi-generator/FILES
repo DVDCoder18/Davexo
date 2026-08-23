@@ -22,6 +22,7 @@ model/administrationStatsResponseDto.ts
 model/budgetConsumptionResponseDto.ts
 model/budgetRequestDto.ts
 model/budgetResponseDto.ts
+model/customErrorResponse.ts
 model/dashboardResponseDto.ts
 model/expenseCategoryBreakdownResponseDto.ts
 model/expenseCategoryRequestDto.ts

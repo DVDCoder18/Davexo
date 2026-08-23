@@ -17,18 +17,18 @@ export interface ShoppingListResponseDto {
     /**
      * High priority items: MISSING and TO_REPLACE
      */
-    highPriorityItems?: Array<InventoryItemResponseDto>;
+    highPriorityItems: Array<InventoryItemResponseDto>;
     /**
      * Medium priority items: LOW_STOCK and NEED_MORE
      */
-    mediumPriorityItems?: Array<InventoryItemResponseDto>;
+    mediumPriorityItems: Array<InventoryItemResponseDto>;
     /**
      * Low priority items: OUT_OF_SERVICE
      */
-    lowPriorityItems?: Array<InventoryItemResponseDto>;
+    lowPriorityItems: Array<InventoryItemResponseDto>;
     /**
      * Total number of items included in the shopping list
      */
-    totalItems?: number;
+    totalItems: number;
 }
 

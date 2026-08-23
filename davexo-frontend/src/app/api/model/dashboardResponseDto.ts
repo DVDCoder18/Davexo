@@ -20,30 +20,30 @@ export interface DashboardResponseDto {
     /**
      * Total amount spent by the user during the current month
      */
-    currentMonthExpensesTotal?: number;
+    currentMonthExpensesTotal: number;
     /**
      * Total number of tasks currently in TO_DO status
      */
-    totalTasksToDo?: number;
+    totalTasksToDo: number;
     /**
      * Total number of inventory items currently included in the shopping list
      */
-    totalShoppingItems?: number;
+    totalShoppingItems: number;
     /**
      * Current consumption of the user\'s global budget, or null if no global budget exists
      */
-    globalBudgetConsumption?: BudgetConsumptionResponseDto;
+    globalBudgetConsumption: BudgetConsumptionResponseDto | null;
     /**
      * Up to 5 TO_DO tasks ordered by business priority and due date
      */
-    tasksToDo?: Array<TaskResponseDto>;
+    tasksToDo: Array<TaskResponseDto>;
     /**
      * Up to 5 shopping list items ordered by shopping priority
      */
-    shoppingItems?: Array<InventoryItemResponseDto>;
+    shoppingItems: Array<InventoryItemResponseDto>;
     /**
      * The 10 most recent expenses, ordered by expense date descending
      */
-    recentExpenses?: Array<ExpenseResponseDto>;
+    recentExpenses: Array<ExpenseResponseDto>;
 }
 

@@ -19,14 +19,14 @@ export interface StatisticsResponseDto {
     /**
      * Effective statistics period
      */
-    period?: PeriodResponseDto;
+    period: PeriodResponseDto;
     /**
      * Expense statistics calculated for the period
      */
-    expenses?: ExpenseStatisticsResponseDto;
+    expenses: ExpenseStatisticsResponseDto;
     /**
      * Task statistics calculated for the period
      */
-    tasks?: TaskStatisticsResponseDto;
+    tasks: TaskStatisticsResponseDto;
 }
 

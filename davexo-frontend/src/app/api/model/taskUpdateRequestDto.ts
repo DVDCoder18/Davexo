@@ -13,9 +13,9 @@ export interface TaskUpdateRequestDto {
     title: string;
     priority: TaskUpdateRequestDto.PriorityEnum;
     status: TaskUpdateRequestDto.StatusEnum;
-    dueDate?: string;
-    completedAt?: string;
-    note?: string;
+    dueDate?: string | null;
+    completedAt?: string | null;
+    note?: string | null;
 }
 export namespace TaskUpdateRequestDto {
     export const PriorityEnum = {

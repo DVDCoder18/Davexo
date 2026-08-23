@@ -17,6 +17,8 @@ import { Observable }                                        from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 // @ts-ignore
+import { CustomErrorResponse } from '../model/customErrorResponse';
+// @ts-ignore
 import { ExpenseCategoryRequestDto } from '../model/expenseCategoryRequestDto';
 // @ts-ignore
 import { ExpenseCategoryResponseDto } from '../model/expenseCategoryResponseDto';
@@ -45,10 +47,10 @@ export class ExpenseCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
-    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
-    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
-    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
+    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
+    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
+    public addExpenseCategory(expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (expenseCategoryRequestDto === null || expenseCategoryRequestDto === undefined) {
             throw new Error('Required parameter expenseCategoryRequestDto was null or undefined when calling addExpenseCategory.');
         }
@@ -59,7 +61,7 @@ export class ExpenseCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -114,10 +116,10 @@ export class ExpenseCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deleteExpenseCategory(expenseCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public deleteExpenseCategory(expenseCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public deleteExpenseCategory(expenseCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (expenseCategoryId === null || expenseCategoryId === undefined) {
             throw new Error('Required parameter expenseCategoryId was null or undefined when calling deleteExpenseCategory.');
         }
@@ -128,6 +130,7 @@ export class ExpenseCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -171,10 +174,10 @@ export class ExpenseCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getAllExpenseCategories(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<Array<ExpenseCategoryResponseDto>>;
-    public getAllExpenseCategories(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ExpenseCategoryResponseDto>>>;
-    public getAllExpenseCategories(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ExpenseCategoryResponseDto>>>;
-    public getAllExpenseCategories(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAllExpenseCategories(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ExpenseCategoryResponseDto>>;
+    public getAllExpenseCategories(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ExpenseCategoryResponseDto>>>;
+    public getAllExpenseCategories(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ExpenseCategoryResponseDto>>>;
+    public getAllExpenseCategories(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -182,7 +185,7 @@ export class ExpenseCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -227,10 +230,10 @@ export class ExpenseCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
-    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
-    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
-    public getExpenseCategoryDetail(expenseCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
+    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
+    public getExpenseCategoryDetail(expenseCategoryId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
+    public getExpenseCategoryDetail(expenseCategoryId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (expenseCategoryId === null || expenseCategoryId === undefined) {
             throw new Error('Required parameter expenseCategoryId was null or undefined when calling getExpenseCategoryDetail.');
         }
@@ -241,7 +244,7 @@ export class ExpenseCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
@@ -287,10 +290,10 @@ export class ExpenseCategoriesService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
-    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
-    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
-    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ExpenseCategoryResponseDto>;
+    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ExpenseCategoryResponseDto>>;
+    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ExpenseCategoryResponseDto>>;
+    public updateExpenseCategory(expenseCategoryId: number, expenseCategoryRequestDto: ExpenseCategoryRequestDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (expenseCategoryId === null || expenseCategoryId === undefined) {
             throw new Error('Required parameter expenseCategoryId was null or undefined when calling updateExpenseCategory.');
         }
@@ -304,7 +307,7 @@ export class ExpenseCategoriesService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);

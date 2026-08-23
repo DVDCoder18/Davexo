@@ -11,6 +11,6 @@
 
 export interface ExpenseCategoryRequestDto { 
     name: string;
-    budgetId?: number;
+    budgetId?: number | null;
 }
 

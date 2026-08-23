@@ -9,13 +9,37 @@
  */
 
 
+/**
+ * Expense data
+ */
 export interface ExpenseResponseDto { 
-    id?: number;
-    label?: string;
-    amount?: number;
-    note?: string;
-    expenseDate?: string;
-    expenseCategoryId?: number;
-    expenseCategoryName?: string;
+    /**
+     * Expense identifier
+     */
+    id: number;
+    /**
+     * Expense label
+     */
+    label: string;
+    /**
+     * Expense amount
+     */
+    amount: number;
+    /**
+     * Optional expense note
+     */
+    note: string | null;
+    /**
+     * Expense date
+     */
+    expenseDate: string;
+    /**
+     * Expense category identifier
+     */
+    expenseCategoryId: number;
+    /**
+     * Expense category name
+     */
+    expenseCategoryName: string;
 }
 

@@ -2,6 +2,7 @@ export * from './administrationStatsResponseDto';
 export * from './budgetConsumptionResponseDto';
 export * from './budgetRequestDto';
 export * from './budgetResponseDto';
+export * from './customErrorResponse';
 export * from './dashboardResponseDto';
 export * from './expenseCategoryBreakdownResponseDto';
 export * from './expenseCategoryRequestDto';

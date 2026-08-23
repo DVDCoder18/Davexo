@@ -9,7 +9,13 @@
  */
 
 
+/**
+ * Global administration statistics
+ */
 export interface AdministrationStatsResponseDto { 
-    totalUsers?: number;
+    /**
+     * Total number of registered users
+     */
+    totalUsers: number;
 }
 

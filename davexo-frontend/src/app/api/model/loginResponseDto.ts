@@ -9,12 +9,30 @@
  */
 
 
+/**
+ * Authentication result returned after a successful login
+ */
 export interface LoginResponseDto { 
-    token?: string;
-    userId?: number;
-    pseudo?: string;
-    email?: string;
-    role?: LoginResponseDto.RoleEnum;
+    /**
+     * JWT access token
+     */
+    token: string;
+    /**
+     * Authenticated user identifier
+     */
+    userId: number;
+    /**
+     * Authenticated user\'s pseudo
+     */
+    pseudo: string;
+    /**
+     * Authenticated user\'s email
+     */
+    email: string;
+    /**
+     * Authenticated user\'s role
+     */
+    role: LoginResponseDto.RoleEnum;
 }
 export namespace LoginResponseDto {
     export const RoleEnum = {

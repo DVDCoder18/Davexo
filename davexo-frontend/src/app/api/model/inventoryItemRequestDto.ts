@@ -28,7 +28,7 @@ export interface InventoryItemRequestDto {
     /**
      * Optional note about the inventory item
      */
-    note?: string;
+    note?: string | null;
     /**
      * Identifier of the inventory category associated with the item
      */

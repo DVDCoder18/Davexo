@@ -9,10 +9,25 @@
  */
 
 
+/**
+ * Expense statistics breakdown for one category
+ */
 export interface ExpenseCategoryBreakdownResponseDto { 
-    categoryId?: number;
-    categoryName?: string;
-    totalAmount?: number;
-    percentage?: number;
+    /**
+     * Expense category identifier
+     */
+    categoryId: number;
+    /**
+     * Expense category name
+     */
+    categoryName: string;
+    /**
+     * Total amount spent in the category
+     */
+    totalAmount: number;
+    /**
+     * Percentage of total expenses represented by the category
+     */
+    percentage: number;
 }
 

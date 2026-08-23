@@ -16,22 +16,22 @@ export interface BudgetConsumptionResponseDto {
     /**
      * Budget identifier
      */
-    budgetId?: number;
+    budgetId: number;
     /**
      * Configured budget amount
      */
-    budgetAmount?: number;
+    budgetAmount: number;
     /**
      * Amount spent during the current month
      */
-    spentAmount?: number;
+    spentAmount: number;
     /**
      * Remaining budget amount. Can be negative when the budget is exceeded
      */
-    remainingAmount?: number;
+    remainingAmount: number;
     /**
-     * Budget consumption percentage. Can exceed 100 when the budget is exceeded, and can be null if the budget amount is zero
+     * Budget consumption percentage. Can exceed 100 when the budget is exceeded and can be null if the budget amount is zero
      */
-    consumptionPercentage?: number;
+    consumptionPercentage: number | null;
 }
 

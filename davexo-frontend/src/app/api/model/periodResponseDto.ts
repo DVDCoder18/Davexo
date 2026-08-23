@@ -16,15 +16,15 @@ export interface PeriodResponseDto {
     /**
      * Statistics period type
      */
-    periodType?: PeriodResponseDto.PeriodTypeEnum;
+    periodType: PeriodResponseDto.PeriodTypeEnum;
     /**
      * First date included in the statistics period
      */
-    startDate?: string;
+    startDate: string;
     /**
      * Last date included in the statistics period
      */
-    endDate?: string;
+    endDate: string;
 }
 export namespace PeriodResponseDto {
     export const PeriodTypeEnum = {

@@ -9,14 +9,38 @@
  */
 
 
+/**
+ * Inventory item data
+ */
 export interface InventoryItemResponseDto { 
-    id?: number;
-    name?: string;
-    type?: InventoryItemResponseDto.TypeEnum;
-    status?: InventoryItemResponseDto.StatusEnum;
-    note?: string;
-    inventoryCategoryId?: number;
-    inventoryCategoryName?: string;
+    /**
+     * Inventory item identifier
+     */
+    id: number;
+    /**
+     * Inventory item name
+     */
+    name: string;
+    /**
+     * Inventory item type
+     */
+    type: InventoryItemResponseDto.TypeEnum;
+    /**
+     * Current inventory item status
+     */
+    status: InventoryItemResponseDto.StatusEnum;
+    /**
+     * Optional note about the inventory item
+     */
+    note: string | null;
+    /**
+     * Inventory category identifier
+     */
+    inventoryCategoryId: number;
+    /**
+     * Inventory category name
+     */
+    inventoryCategoryName: string;
 }
 export namespace InventoryItemResponseDto {
     export const TypeEnum = {

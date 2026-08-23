@@ -10,10 +10,25 @@
 import { ExpenseCategoryBreakdownResponseDto } from './expenseCategoryBreakdownResponseDto';
 
 
+/**
+ * Expense statistics for a requested period
+ */
 export interface ExpenseStatisticsResponseDto { 
-    totalSpent?: number;
-    evolutionPercentage?: number;
-    historicalMonthlyAverage?: number;
-    categoryBreakdown?: Array<ExpenseCategoryBreakdownResponseDto>;
+    /**
+     * Total amount spent during the requested period
+     */
+    totalSpent: number;
+    /**
+     * Expense evolution percentage compared with the previous comparable period, or null when no comparison can be calculated
+     */
+    evolutionPercentage: number | null;
+    /**
+     * Historical monthly expense average based on completed months, or null when insufficient history exists
+     */
+    historicalMonthlyAverage: number | null;
+    /**
+     * Expense breakdown by category
+     */
+    categoryBreakdown: Array<ExpenseCategoryBreakdownResponseDto>;
 }
 

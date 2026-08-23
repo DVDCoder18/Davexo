@@ -9,15 +9,42 @@
  */
 
 
+/**
+ * Task data
+ */
 export interface TaskResponseDto { 
-    id?: number;
-    title?: string;
-    priority?: TaskResponseDto.PriorityEnum;
-    status?: TaskResponseDto.StatusEnum;
-    createdAt?: string;
-    dueDate?: string;
-    completedAt?: string;
-    note?: string;
+    /**
+     * Task identifier
+     */
+    id: number;
+    /**
+     * Task title
+     */
+    title: string;
+    /**
+     * Task priority
+     */
+    priority: TaskResponseDto.PriorityEnum;
+    /**
+     * Current task status
+     */
+    status: TaskResponseDto.StatusEnum;
+    /**
+     * Task creation date
+     */
+    createdAt: string;
+    /**
+     * Optional task due date
+     */
+    dueDate: string | null;
+    /**
+     * Completion date, or null when the task is not completed
+     */
+    completedAt: string | null;
+    /**
+     * Optional task note
+     */
+    note: string | null;
 }
 export namespace TaskResponseDto {
     export const PriorityEnum = {

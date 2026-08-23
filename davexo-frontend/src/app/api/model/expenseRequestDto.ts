@@ -12,8 +12,8 @@
 export interface ExpenseRequestDto { 
     label: string;
     amount: number;
-    note?: string;
-    expenseDate?: string;
+    note?: string | null;
+    expenseDate?: string | null;
     expenseCategoryId: number;
 }
 

@@ -17,6 +17,8 @@ import { Observable }                                        from 'rxjs';
 import { OpenApiHttpParams, QueryParamStyle } from '../query.params';
 
 // @ts-ignore
+import { CustomErrorResponse } from '../model/customErrorResponse';
+// @ts-ignore
 import { StatisticsResponseDto } from '../model/statisticsResponseDto';
 
 // @ts-ignore
@@ -46,10 +48,10 @@ export class StatisticsService extends BaseService {
      * @param reportProgress flag to report request and response progress.
      * @param options additional options
      */
-    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<StatisticsResponseDto>;
-    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<StatisticsResponseDto>>;
-    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<StatisticsResponseDto>>;
-    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<StatisticsResponseDto>;
+    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<StatisticsResponseDto>>;
+    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<StatisticsResponseDto>>;
+    public getStatistics(periodType: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR', startDate: string, endDate: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (periodType === null || periodType === undefined) {
             throw new Error('Required parameter periodType was null or undefined when calling getStatistics.');
         }
@@ -95,7 +97,7 @@ export class StatisticsService extends BaseService {
         localVarHeaders = this.configuration.addCredentialToHeaders('bearerAuth', 'Authorization', localVarHeaders, 'Bearer ');
 
         const localVarHttpHeaderAcceptSelected: string | undefined = options?.httpHeaderAccept ?? this.configuration.selectHeaderAccept([
-            '*/*'
+            'application/json'
         ]);
         if (localVarHttpHeaderAcceptSelected !== undefined) {
             localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);

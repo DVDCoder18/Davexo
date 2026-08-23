@@ -10,14 +10,29 @@
 
 
 /**
- * Aggregated dashboard data for the authenticated user
+ * Budget data
  */
 export interface BudgetResponseDto { 
-    id?: number;
-    name?: string;
-    amount?: number;
-    scope?: BudgetResponseDto.ScopeEnum;
-    followedCategoryIds?: Array<number>;
+    /**
+     * Budget identifier
+     */
+    id: number;
+    /**
+     * Budget name
+     */
+    name: string;
+    /**
+     * Configured budget amount
+     */
+    amount: number;
+    /**
+     * Budget scope
+     */
+    scope: BudgetResponseDto.ScopeEnum;
+    /**
+     * Expense category IDs followed by the budget. Empty for a global budget
+     */
+    followedCategoryIds: Array<number>;
 }
 export namespace BudgetResponseDto {
     export const ScopeEnum = {

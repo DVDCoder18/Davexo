@@ -10,10 +10,25 @@
 import { TaskPriorityBreakdownResponseDto } from './taskPriorityBreakdownResponseDto';
 
 
+/**
+ * Task statistics for a requested period
+ */
 export interface TaskStatisticsResponseDto { 
-    completionRate?: number;
-    deadlineRespectRate?: number;
-    averageCompletionTimeDays?: number;
-    priorityBreakdown?: Array<TaskPriorityBreakdownResponseDto>;
+    /**
+     * Task completion rate, or null when no planned task exists for the period
+     */
+    completionRate: number | null;
+    /**
+     * Deadline respect rate, or null when no completed planned task exists
+     */
+    deadlineRespectRate: number | null;
+    /**
+     * Average task completion time in days, or null when no completed task can be evaluated
+     */
+    averageCompletionTimeDays: number | null;
+    /**
+     * Completed task breakdown by priority
+     */
+    priorityBreakdown: Array<TaskPriorityBreakdownResponseDto>;
 }
 

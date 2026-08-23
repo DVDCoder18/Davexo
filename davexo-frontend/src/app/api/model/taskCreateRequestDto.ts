@@ -12,8 +12,8 @@
 export interface TaskCreateRequestDto { 
     title: string;
     priority: TaskCreateRequestDto.PriorityEnum;
-    dueDate?: string;
-    note?: string;
+    dueDate?: string | null;
+    note?: string | null;
 }
 export namespace TaskCreateRequestDto {
     export const PriorityEnum = {
