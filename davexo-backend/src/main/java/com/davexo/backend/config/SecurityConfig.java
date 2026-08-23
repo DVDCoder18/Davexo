@@ -1,9 +1,11 @@
 package com.davexo.backend.config;
 
-import com.davexo.backend.enums.Role;
 import com.davexo.backend.security.CustomAccessDeniedHandler;
 import com.davexo.backend.security.CustomAuthenticationEntryPoint;
 
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.davexo.backend.security.CustomUserDetailsService;
 import com.davexo.backend.security.JwtAuthenticationFilter;
@@ -34,6 +38,9 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Value("${app.cors.allowed-origin}")
+    private String allowedOrigin;
 
 
     @Bean
@@ -58,50 +65,61 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
-                
-                .requestMatchers(
-            "/v3/api-docs/**",
-                        "/swagger-ui/**",
-                        "/swagger-ui.html")
-                .permitAll()
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors((cors) -> cors
+                            .configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/sign-up").permitAll()
 
-                .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
-                
-                .requestMatchers("/api/tasks/**").authenticated()
-                
-                .requestMatchers("/api/budgets/**").authenticated()
-                
-                .requestMatchers("/api/expenses/**").authenticated()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html")
+                        .permitAll()
 
-                .requestMatchers("/api/expense-categories/**").authenticated()
-                
-                .requestMatchers("/api/inventory-categories/**").authenticated()
+                        .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
 
-                .requestMatchers("/api/inventory-items/**").authenticated()
-                
-                .requestMatchers("/api/statistics").authenticated()
-                
-                .requestMatchers("/api/dashboard/**").authenticated()
+                        .requestMatchers("/api/tasks/**").authenticated()
 
-                .anyRequest().authenticated()
-            )
-            .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-            .authenticationProvider(authenticationProvider())
-            
-            .exceptionHandling(exception -> exception
-                .authenticationEntryPoint(customAuthenticationEntryPoint)
-                .accessDeniedHandler(customAccessDeniedHandler)
-            )
+                        .requestMatchers("/api/budgets/**").authenticated()
 
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        .requestMatchers("/api/expenses/**").authenticated()
+
+                        .requestMatchers("/api/expense-categories/**").authenticated()
+
+                        .requestMatchers("/api/inventory-categories/**").authenticated()
+
+                        .requestMatchers("/api/inventory-items/**").authenticated()
+
+                        .requestMatchers("/api/statistics").authenticated()
+
+                        .requestMatchers("/api/dashboard/**").authenticated()
+
+                        .anyRequest().authenticated())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler))
+
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
-                
+
+    }
+
+    @Bean
+    UrlBasedCorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedOrigin(allowedOrigin);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
