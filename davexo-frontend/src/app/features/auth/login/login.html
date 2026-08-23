@@ -1,0 +1,43 @@
+<div class="form-div" id="form-div">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+    <label for="connexion-form-email">Email</label><br>
+    <input formControlName="email" type="email" id="connexion-form-email" name="connexion-form-email">
+
+    @if (
+    loginForm.controls.email.touched &&
+    loginForm.controls.email.hasError('required')
+    ) {
+    <p>Email is required.</p>
+    }
+
+    @if (
+    loginForm.controls.email.touched &&
+    loginForm.controls.email.hasError('email')
+    ) {
+    <p>Email format is invalid.</p>
+    }
+
+    <br><br>
+
+    <label for="connexion-form-password">Password</label><br>
+    <input formControlName="password" type="password" id="connexion-form-password" name="connexion-form-password">
+
+    @if (
+    loginForm.controls.password.touched &&
+    loginForm.controls.password.hasError('required')
+    ) {
+    <p>Password is required.</p>
+    }
+
+    @if (errorMessage()) {
+    <p>{{ errorMessage() }}</p>
+    }
+
+    <p>Vous n'avez pas de compte ? <a>Inscrivez-vous!</a></p>
+
+    <button type="submit" id="connexion-form-button">
+      Se connecter
+    </button>
+  </form>
+</div>
