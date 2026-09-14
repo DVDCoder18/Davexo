@@ -141,7 +141,7 @@ DB_USERNAME=davexo
 DB_PASSWORD=change-me
 
 JWT_SECRET=replace-with-a-base64-encoded-secret
-JWT_EXPIRATiON=3600000
+JWT_EXPIRATION=3600000
 
 ALLOWED_EMAILS=user@example.com,another-user@example.com
 CORS_ALLOWED_ORIGIN=http://localhost:4200
@@ -151,16 +151,13 @@ Environment variable reference:
 
 | Variable | Description |
 |---|---|
-| `DB_NAME` | PostgreSQL database name. It must currently remain `davexo` because the JDBC URL is configured with this name. |
+| `DB_NAME` | PostgreSQL database name used by Docker Compose and the backend JDBC connection. |
 | `DB_USERNAME` | PostgreSQL username. |
 | `DB_PASSWORD` | PostgreSQL password. |
 | `JWT_SECRET` | Base64-encoded secret used to sign JWTs. It must represent a sufficiently long key of at least 256 bits. |
-| `JWT_EXPIRATiON` | JWT validity period in milliseconds. |
+| `JWT_EXPIRATION` | JWT validity period in milliseconds. |
 | `ALLOWED_EMAILS` | Comma-separated list of email addresses allowed to create an account. |
 | `CORS_ALLOWED_ORIGIN` | Origin allowed to call the API from a browser. |
-
-> [!WARNING]
-> The `application.properties` file currently references `JWT_EXPIRATiON` with a lowercase `i`. Use this exact spelling until the configuration is standardized.
 
 The `.env` file is ignored by Git and must never be committed to the repository.
 
