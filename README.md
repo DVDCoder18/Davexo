@@ -136,8 +136,8 @@ cd Davexo
 Create a `davexo-backend/.env` file:
 
 ```dotenv
-DB_NAME=davexo
-DB_USERNAME=davexo
+DB_NAME=db_name
+DB_USERNAME=db_username
 DB_PASSWORD=change-me
 
 JWT_SECRET=replace-with-a-base64-encoded-secret
